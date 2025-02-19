@@ -4,8 +4,10 @@ import { StreamingTextResponse } from "ai";
 
 // 定义支持的模型列表
 const SUPPORTED_MODELS = [
-  "deepseek-ai/DeepSeek-R1",
+  "Pro/deepseek-ai/DeepSeek-V3",
+  "deepseek-ai/DeepSeek-V3",
   "Pro/deepseek-ai/DeepSeek-R1",
+  "deepseek-ai/DeepSeek-R1",
   "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
   "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
   "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
@@ -29,7 +31,7 @@ export async function POST(request: Request) {
   try {
     const {
       marketData,
-      model = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+      model = "Pro/deepseek-ai/DeepSeek-V3",
       stream = false,
     } = await request.json();
 
