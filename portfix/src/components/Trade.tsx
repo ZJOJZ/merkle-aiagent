@@ -1,4 +1,3 @@
-'use client'
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -50,7 +49,6 @@ const TradeCard = ({
                         animate={{ height: "auto" }}
                         exit={{ height: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        style={{ overflow: "hidden" }}
                     >
                         <div className="p-4 space-y-4 border-t border-white/20">
                             <div className="flex gap-2">
