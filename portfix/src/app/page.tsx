@@ -7,6 +7,7 @@ import { NetworkInfo } from "@/components/NetworkInfo";
 import { TopBanner } from "@/components/TopBanner";
 import { TransferAPT } from "@/components/TransferAPT";
 import { WalletDetails } from "@/components/WalletDetails";
+import { MarketAnalysisButton } from "@/components/MarketAnalysisButton";
 // Internal Components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
@@ -16,7 +17,7 @@ function App() {
 
   return (
     <>
-    <TopBanner />
+      <TopBanner />
       <Header />
       <div className="flex items-center justify-center flex-col">
         {connected ? (
@@ -34,9 +35,13 @@ function App() {
             <CardTitle>To get started Connect a wallet</CardTitle>
           </CardHeader>
         )}
+        
       </div>
+      <MarketAnalysisButton
+                marketData="APT当前市场数据"
+                onAnalysisComplete={(analysis) => console.log(analysis)}
+              />
     </>
   );
 }
-
 export default App;
