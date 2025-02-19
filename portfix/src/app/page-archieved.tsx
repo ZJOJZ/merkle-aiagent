@@ -14,7 +14,7 @@ import { Dashboard } from "@/components/Dashboard";
 import { Trade } from "@/components/Trade";
 
 // Internal Components
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
@@ -25,47 +25,33 @@ function App() {
 
   return (
     <>
-      {/* <TopBanner /> */}
+      <TopBanner />
       <Header />
       <div className="flex items-center justify-center flex-col">
         {connected ? (
           <Card>
-            <CardContent className="flex flex-row gap-10 pt-6">
-              <div className="flex-1">
-                <Dashboard />
-              </div>
-              <div className="flex-1">
-                <Trade />
-              </div>
+            <CardContent className="flex flex-col gap-10 pt-6">
+              <Dashboard />
+              <Trade />
+              <Button onClick={() => setShowDetails(!showDetails)}>
+                {showDetails ? "Hide Account Details" : "Show Account Details"}
+              </Button>
+              {showDetails && (
+                <>
+                <WalletDetails />
+                  <NetworkInfo />
+                  <AccountInfo />
+                  <TransferAPT />
+                  <MessageBoard />
+                </>
+              )}
             </CardContent>
           </Card>
-          
         ) : (
           <CardHeader>
             <CardTitle>To get started Connect a wallet</CardTitle>
           </CardHeader>
         )}
-
-{connected && (
-        <Card>
-          <CardContent className="flex flex-row gap-10 pt-6">
-          <div className="flex-1">
-          <Button onClick={() => setShowDetails(!showDetails)}>
-            {showDetails ? "Hide Account Details" : "Show Account Details"}
-          </Button>
-          {showDetails && (
-            <>
-              <WalletDetails />
-              <NetworkInfo />
-              <AccountInfo />
-              <TransferAPT />
-              <MessageBoard />
-            </>
-          )}</div>
-
-            </CardContent>
-        </Card>
-      )}
       </div>
     </>
   );
