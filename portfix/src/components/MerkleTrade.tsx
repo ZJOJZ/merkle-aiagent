@@ -47,11 +47,13 @@ export function MerkleTrade() {
     },
   });
   const onClickButton = async () => {
+    console.log(amount)
     if (!account || !amount) {
       return;
     }
 
     try {
+<<<<<<< HEAD
       const rawTx = await OpenPosition("BTC-USD", amount, islong, 50, account.address, merkle);
       const tx = new SimpleTransaction(rawTx.data.function);
       const signedTx = await signTransaction(tx);
@@ -59,6 +61,10 @@ export function MerkleTrade() {
         transaction: tx,
         senderAuthenticator: signedTx
       });
+=======
+      const transaction = await OpenPosition("BTC_USD", amount, islong, 50, account.address, merkle);
+      const committedTransaction = await signAndSubmitTransaction(transaction.raw_tx);
+>>>>>>> 2f7658c27b3cdcee8b48b11d93a06bd443d8d9b2
       const executedTransaction = await aptosClient().waitForTransaction({
         transactionHash: response.hash,
       });
@@ -83,11 +89,10 @@ export function MerkleTrade() {
   return (
     <div className="flex flex-col gap-6">
       <h4 className="text-lg font-medium">APT balance: {aptBalance / Math.pow(10, 8)}</h4>
-      Recipient <Input disabled={!account} placeholder="0x1" onChange={(e) => setRecipient(e.target.value)} />
       Amount{" "}
-      <Input disabled={!account} placeholder="100" onChange={(e) => setTransferAmount(parseFloat(e.target.value))} />
+      <Input disabled={!account} placeholder="1000000" onChange={(e) => setTransferAmount(BigInt(parseInt(e.target.value)))} />
       <Button
-        disabled={!account || !recipient || !transferAmount || transferAmount > aptBalance || transferAmount <= 0}
+        disabled={!account || !amount || amount > aptBalance || amount <= 0}
         onClick={onClickButton}
       >
         Transfer
