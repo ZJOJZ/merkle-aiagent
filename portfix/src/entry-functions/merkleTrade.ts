@@ -37,7 +37,7 @@ export async function OpenPosition(token: string, amount: bigint, side: boolean,
       });
     return {
         data: {
-            function: transaction.rawTransaction.
+            function: transaction.rawTransaction
         }
     }
     //return sendTransaction(Payload, address, aptos);

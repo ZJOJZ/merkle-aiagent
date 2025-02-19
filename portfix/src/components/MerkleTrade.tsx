@@ -9,11 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAccountAPTBalance } from "@/view-functions/getAccountBalance";
 import { OpenPosition } from "@/entry-functions/merkleTrade";
+import { SimpleTransaction } from '@aptos-labs/ts-sdk';
 
 const merkle = new MerkleClient(await MerkleClientConfig.testnet());
 
 export function MerkleTrade() {
-  const { account, signAndSubmitTransaction } = useWallet();
+  const { account, signTransaction, submitTransaction } = useWallet();
   const queryClient = useQueryClient();
 
   const [aptBalance, setAptBalance] = useState<number>(0);
@@ -51,10 +52,15 @@ export function MerkleTrade() {
     }
 
     try {
-      const transaction = await OpenPosition("BTC-USD", amount, islong, 50, account.address, merkle);
-      const committedTransaction = await signAndSubmitTransaction(transaction.data.function);
+      const rawTx = await OpenPosition("BTC-USD", amount, islong, 50, account.address, merkle);
+      const tx = new SimpleTransaction(rawTx.data.function);
+      const signedTx = await signTransaction(tx);
+      const response = await submitTransaction({
+        transaction: tx,
+        senderAuthenticator: signedTx
+      });
       const executedTransaction = await aptosClient().waitForTransaction({
-        transactionHash: committedTransaction.hash,
+        transactionHash: response.hash,
       });
       queryClient.invalidateQueries({
         queryKey: ["apt-balance", account?.address],
