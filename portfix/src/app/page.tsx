@@ -7,6 +7,11 @@ import { NetworkInfo } from "@/components/NetworkInfo";
 import { TopBanner } from "@/components/TopBanner";
 import { TransferAPT } from "@/components/TransferAPT";
 import { WalletDetails } from "@/components/WalletDetails";
+
+// Main Components
+import { Dashboard } from "@/components/Dashboard";
+import { Trade } from "@/components/Trade";
+
 // Internal Components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
@@ -22,6 +27,8 @@ function App() {
         {connected ? (
           <Card>
             <CardContent className="flex flex-col gap-10 pt-6">
+              <Dashboard />
+              <Trade />
               <WalletDetails />
               <NetworkInfo />
               <AccountInfo />
