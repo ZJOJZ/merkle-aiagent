@@ -7,6 +7,7 @@ import { NetworkInfo } from "@/components/NetworkInfo";
 import { TopBanner } from "@/components/TopBanner";
 import { TransferAPT } from "@/components/TransferAPT";
 import { WalletDetails } from "@/components/WalletDetails";
+import { MerkleTrade } from "@/components/MerkleTrade";
 // Internal Components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
@@ -27,6 +28,7 @@ function App() {
               <AccountInfo />
               <TransferAPT />
               <MessageBoard />
+              <MerkleTrade />
             </CardContent>
           </Card>
         ) : (
