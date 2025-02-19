@@ -51,9 +51,8 @@ export function MerkleTrade() {
     }
 
     try {
-      const committedTransaction = await signAndSubmitTransaction(
-        OpenPosition("BTC-USD", amount, islong, 50, account.address, merkle),
-      );
+      const transaction = await OpenPosition("BTC-USD", amount, islong, 50, account.address, merkle);
+      const committedTransaction = await signAndSubmitTransaction(transaction.data.function);
       const executedTransaction = await aptosClient().waitForTransaction({
         transactionHash: committedTransaction.hash,
       });
