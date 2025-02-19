@@ -5,7 +5,7 @@ import { AccountInfo } from "@/components/AccountInfo";
 import { Header } from "@/components/Header";
 import { MessageBoard } from "@/components/MessageBoard";
 import { NetworkInfo } from "@/components/NetworkInfo";
-import { TopBanner } from "@/components/TopBanner";
+// import { TopBanner } from "@/components/TopBanner";
 import { TransferAPT } from "@/components/TransferAPT";
 import { WalletDetails } from "@/components/WalletDetails";
 
@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { MoveAIAgent } from '@/components/MoveAIAgent';
 
 function App() {
   const { connected } = useWallet();
@@ -60,6 +61,23 @@ function App() {
               <AccountInfo />
               <TransferAPT />
               <MessageBoard />
+            </>
+          )}</div>
+
+            </CardContent>
+        </Card>
+      )}
+
+{connected && (
+        <Card>
+          <CardContent className="flex flex-row gap-10 pt-6">
+          <div className="flex-1">
+          <Button onClick={() => setShowDetails(!showDetails)}>
+            {showDetails ? "Hide Merkle Agent" : "Call Merkle AI Agent"}
+          </Button>
+          {showDetails && (
+            <>
+              <MoveAIAgent />
             </>
           )}</div>
 
