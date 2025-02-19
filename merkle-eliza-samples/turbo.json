@@ -1,0 +1,30 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "check-types": {
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "@elizaos/agent#check-types": {},
+    "@elizaos/plugin-merkle-example-price#build": {
+      "dependsOn": [
+        "@elizaos/plugin-merkle#build"
+      ]
+    },
+    "@elizaos/plugin-merkle-example-sns#build": {
+      "dependsOn": [
+        "@elizaos/plugin-merkle#build"
+      ]
+    },
+    "build": {
+      "outputs": [
+        "dist/**"
+      ]
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    }
+  }
+}
