@@ -23,6 +23,7 @@ import { MoveAIAgent } from '@/components/MoveAIAgent';
 function App() {
   const { connected } = useWallet();
   const [showDetails, setShowDetails] = useState(false);
+  const [callAIAgent, setcallAIAgent] = useState(false);
 
   return (
     <>
@@ -72,10 +73,10 @@ function App() {
         <Card>
           <CardContent className="flex flex-row gap-10 pt-6">
           <div className="flex-1">
-          <Button onClick={() => setShowDetails(!showDetails)}>
-            {showDetails ? "Hide Merkle Agent" : "Call Merkle AI Agent"}
+          <Button onClick={() => setcallAIAgent(!callAIAgent)}>
+            {callAIAgent ? "Hide Merkle Agent" : "Call Merkle AI Agent"}
           </Button>
-          {showDetails && (
+          {callAIAgent && (
             <>
               <MoveAIAgent />
             </>
