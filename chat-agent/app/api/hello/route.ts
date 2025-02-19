@@ -1,17 +1,26 @@
 import { Aptos, AptosConfig, Ed25519PrivateKey, Network, PrivateKey, PrivateKeyVariants } from "@aptos-labs/ts-sdk"
-import { ChatAnthropic } from "@langchain/anthropic"
-import { AIMessage, BaseMessage, ChatMessage, HumanMessage } from "@langchain/core/messages"
-import { MemorySaver } from "@langchain/langgraph"
-import { createReactAgent } from "@langchain/langgraph/prebuilt"
-import { StreamingTextResponse, Message as VercelChatMessage } from "ai"
-import { AgentRuntime, LocalSigner, createAptosTools } from "move-agent-kit"
-import { NextResponse } from "next/server"
+import { ChatOpenAI } from "@langchain/openai";
+import {
+  AIMessage,
+  BaseMessage,
+  ChatMessage,
+  HumanMessage,
+} from "@langchain/core/messages";
+import { MemorySaver } from "@langchain/langgraph";
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { StreamingTextResponse, Message as VercelChatMessage } from "ai";
+import { AgentRuntime, LocalSigner, createAptosTools } from "move-agent-kit";
+import { NextResponse } from "next/server";
 
-const llm = new ChatAnthropic({
-	temperature: 0.7,
-	model: "claude-3-5-sonnet-latest",
-	apiKey: process.env.ANTHROPIC_API_KEY,
-})
+const llm = new ChatOpenAI({
+  temperature: 0.7,
+  modelName: "gpt-3.5-turbo",
+  openAIApiKey: process.env.OPENAI_API_KEY,
+  configuration: {
+    baseURL: process.env.OPENAI_API_BASE_URL, // 可选，如果使用其他兼容接口
+    apiKey: process.env.OPENAI_API_KEY,
+  },
+});
 
 const textDecoder = new TextDecoder()
 
