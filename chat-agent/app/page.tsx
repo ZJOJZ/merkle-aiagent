@@ -1,4 +1,7 @@
 import { ChatWindow } from "@/components/ChatWindow"
+import Dashboard from "@/components/Dashboard"
+import { Trade } from "@/components/Trade"
+// import { ChatWindow } from "@/components/ChatWindow"
 
 export default function Home() {
 	const InfoCard = (
@@ -57,12 +60,19 @@ export default function Home() {
 		</div>
 	)
 	return (
-		<ChatWindow
-			endpoint="api/hello"
-			emoji="🤖"
-			titleText="Aptos agent"
-			placeholder="I'm your friendly Aptos agent! Ask me anything..."
-			emptyStateComponent={InfoCard}
-		></ChatWindow>
+		<div>
+			<div className="flex flex-row gap-3">
+				<Dashboard />
+				<Trade />
+			</div>
+			<ChatWindow
+				endpoint="api/hello"
+				emoji="🤖"
+				titleText="Aptos agent"
+				placeholder="I'm your friendly Aptos agent! Ask me anything..."
+				emptyStateComponent={InfoCard}
+			></ChatWindow>
+		</div>
+
 	)
 }

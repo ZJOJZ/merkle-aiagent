@@ -11,17 +11,23 @@
   "dependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",
     "@langchain/anthropic": "^0.3.12",
-    "@langchain/openai": "^0.0.20",
     "@langchain/core": "^0.3.32",
     "@langchain/langgraph": "^0.2.41",
+    "@langchain/openai": "^0.0.20",
     "ai": "^3.4.33",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.4.5",
     "isomorphic-dompurify": "^2.20.0",
+    "lucide-react": "^0.475.0",
     "marked": "^15.0.6",
     "move-agent-kit": "^0.0.2",
     "next": "15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-toastify": "^11.0.3"
+    "react-toastify": "^11.0.3",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20.17.14",
