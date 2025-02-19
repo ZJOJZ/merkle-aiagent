@@ -1,9 +1,7 @@
-import { MerkleClient, MerkleClientConfig, sleep } from "@merkletrade/ts-sdk";
-import { Account, Ed25519PrivateKey, PrivateKey, SimpleTransaction, 
-    PrivateKeyVariants,Aptos, type InputEntryFunctionData
-} from "@aptos-labs/ts-sdk";
+import { MerkleClient} from "@merkletrade/ts-sdk";
+import { Aptos, type InputEntryFunctionData, SimpleTransaction} from "@aptos-labs/ts-sdk";
 import {AccountAddressInput} from "@aptos-labs/ts-sdk";
-import type { InputTransactionData } from "@aptos-labs/wallet-adapter-react";
+//import type { InputTransactionData } from "@aptos-labs/wallet-adapter-react";
 
 
 export async function sendTransaction(payload: InputEntryFunctionData, address: AccountAddressInput, aptos: Aptos) {
@@ -30,14 +28,17 @@ export async function OpenPosition(token: string, amount: bigint, side: boolean,
         isLong: side,
         isIncrease: true,
     });
-    const aptos = new Aptos(merkle.config.aptosConfig);
-    const transaction = await aptos.transaction.build.simple({
-        sender: address,
-        data: Payload,
-      });
+    //const aptos = new Aptos(merkle.config.aptosConfig);
+    // const transaction = await aptos.transaction.build.simple({
+    //     sender: address,
+    //     data: Payload,
+    //   });
+      
     return {
         data: {
-            function: transaction.rawTransaction.
+            function: Payload.function,
+            functionArguments: Payload.functionArguments,
+            typeArguments: Payload.typeArguments
         }
     }
     //return sendTransaction(Payload, address, aptos);
