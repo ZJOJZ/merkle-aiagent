@@ -1,0 +1,92 @@
+{
+	"name": "move-agent-kit",
+	"version": "0.1.2",
+	"description": "",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.mts",
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"import": {
+				"types": "./dist/index.d.mts",
+				"import": "./dist/index.mjs",
+				"default": "./dist/index.mjs"
+			},
+			"require": {
+				"types": "./dist/index.d.ts",
+				"import": "./dist/index.js",
+				"require": "./dist/index.js"
+			}
+		}
+	},
+	"scripts": {
+		"postbuild": "pnpm run check:exports",
+		"build": "tsup src/index.ts --config tsup.config.ts",
+		"build:dev": "tsup src/index.ts --config tsup.dev.config.ts",
+		"build:dev:watch": "pnpm run build:dev -- --watch",
+		"build:dev:cjs:watch": "pnpm run build:dev -- --watch",
+		"prepublishOnly": "pnpm run build",
+		"check": "biome check .",
+		"check:fix": "biome check --fix .",
+		"typecheck": "tsc",
+		"validate": "pnpm run check && pnpm run tsc",
+		"check:exports": "attw --pack .",
+		"local-release": "changeset version && changeset publish"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/metamove/move-agent-kit.git"
+	},
+	"bugs": {
+		"url": "https://github.com/metamove/move-agent-kit/issues"
+	},
+	"files": ["dist"],
+	"homepage": "https://github.com/metamove/move-agent-kit#readme",
+	"keywords": [],
+	"author": "metamove <hello@metamove.build> (https://metamove.build)",
+	"license": "MIT",
+	"devDependencies": {
+		"@arethetypeswrong/cli": "^0.17.3",
+		"@biomejs/biome": "^1.9.4",
+		"@changesets/cli": "^2.27.12",
+		"@types/node": "^22.10.5",
+		"lefthook": "^1.10.10",
+		"tsup": "^8.3.6",
+		"typescript": "^5.7.3"
+	},
+	"dependencies": {
+		"@langchain/anthropic": "^0.3.11",
+		"@langchain/core": "^0.3.29",
+		"@langchain/langgraph": "^0.2.39",
+		"@pythnetwork/client": "^2.22.0",
+		"@pythnetwork/pyth-aptos-js": "^1.4.2",
+		"axios": "^1.7.9",
+		"bs58": "^6.0.0",
+		"inquirer": "^12.3.2",
+		"langchain": "^0.3.11",
+		"openai": "^4.79.1",
+		"zod": "^3.24.1"
+	},
+	"optionalDependencies": {
+		"@rollup/rollup-darwin-x64-gnu": "4.18.1",
+		"@rollup/rollup-darwin-x64-musl": "4.18.1",
+		"@rollup/rollup-linux-arm64-gnu": "4.18.1",
+		"@rollup/rollup-linux-x64-gnu": "^4.18.1",
+		"@rollup/rollup-linux-x64-musl": "^4.18.1",
+		"@rollup/rollup-win32-arm64-msvc": "4.18.1",
+		"@rollup/rollup-win32-x64-msvc": "4.18.1",
+		"@rollup/rollup-win32-x64-musl": "4.18.1"
+	},
+	"engines": {
+		"node": ">=20.0.0"
+	},
+	"peerDependencies": {
+		"@aptos-labs/ts-sdk": "^1.33.1",
+		"@aptos-labs/wallet-adapter-react": "^3.7.9"
+	},
+	"pnpm": {
+		"ignoredBuiltDependencies": ["bigint-buffer", "bufferutil", "esbuild", "utf-8-validate"],
+		"onlyBuiltDependencies": ["@biomejs/biome", "lefthook"]
+	}
+}
