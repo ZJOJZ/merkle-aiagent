@@ -17,6 +17,8 @@ import { Trade } from "@/components/Trade";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+import { MerkleTrade } from "@/components/MerkleTrade";
+// Internal Components
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 function App() {
