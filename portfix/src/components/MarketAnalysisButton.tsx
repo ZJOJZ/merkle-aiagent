@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { analyzeMarketChat } from "@/entry-functions/analyzeMarketChat";
 
 // 定义支持的模型列表
