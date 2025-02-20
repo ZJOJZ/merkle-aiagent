@@ -32,7 +32,7 @@ cd portfix
 npm install
 # run dev
 npm run dev
-``
+```
 - Don't forget to rename `example.env` to `.env` and add your API key
 
 ## What Move commands are available?
