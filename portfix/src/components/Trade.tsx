@@ -80,10 +80,22 @@ const TradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isE
                     >
                         <div className="p-4 space-y-4 border-t border-white/20">
                             <div className="flex gap-2">
-                                <button className="flex-1 bg-green-600/80 hover:bg-green-600 text-white py-2 rounded-lg">
+                                <button
+                                    disabled
+                                    className={`flex-1 ${position === 'long'
+                                        ? 'bg-green-600 text-white'
+                                        : 'bg-green-600/20 text-green-500'
+                                        } py-2 rounded-lg cursor-default`}
+                                >
                                     Long
                                 </button>
-                                <button className="flex-1 bg-red-600/80 hover:bg-red-600 text-white py-2 rounded-lg">
+                                <button
+                                    disabled
+                                    className={`flex-1 ${position === 'short'
+                                        ? 'bg-red-600 text-white'
+                                        : 'bg-red-600/20 text-red-500'
+                                        } py-2 rounded-lg cursor-default`}
+                                >
                                     Short
                                 </button>
                             </div>
@@ -92,7 +104,8 @@ const TradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isE
                                 <div className="flex items-center gap-2 flex-1">
                                     <input
                                         type="text"
-                                        placeholder="Amount"
+                                        value={amount}
+                                        readOnly
                                         className="flex-1 bg-black/20 rounded-lg p-2 border border-white/20"
                                     />
                                     <span>=</span>
