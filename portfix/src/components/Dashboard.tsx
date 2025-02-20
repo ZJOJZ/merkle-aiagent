@@ -50,7 +50,7 @@ export function Dashboard() {
             <div className="grid gap-4 md:grid-cols-2">
                 <Card className="border-4 border-white/50">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Value</CardTitle>
+                        <CardTitle className="text-xl font-medium">Total Value</CardTitle>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
@@ -73,7 +73,7 @@ export function Dashboard() {
 
                 <Card className="border-4 border-white/50">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">24h Change</CardTitle>
+                        <CardTitle className="text-xl font-medium">24h Change</CardTitle>
                         <div className="h-4 w-4 text-blue-500">🕒</div>
                     </CardHeader>
                     <CardContent>
@@ -84,7 +84,14 @@ export function Dashboard() {
 
             <Card className="border-4 border-white/50">
                 <CardHeader>
-                    <CardTitle>Asset Breakdown</CardTitle>
+                    <CardTitle className="text-xl">Asset Breakdown</CardTitle>
+                    {/* <div className="space-y-4"> */}
+                    {/* 表头 */}
+                    <div className="grid grid-cols-3 items-center font-bold text-gray-400 pb-2 border-b border-gray-800">
+                        <div>Type</div>
+                        <div>Position</div>
+                        <div>Value</div>
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
@@ -92,8 +99,8 @@ export function Dashboard() {
                             <div key={index} className="grid grid-cols-4 items-center">
                                 <div>{asset.symbol}</div>
                                 {/* <div className="font-mono">{asset.address}</div> */}
-                                <div>position: {asset.amount}</div>
-                                <div>value: ${asset.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                                <div className="text-center">{asset.amount}</div>
+                                <div className="text-right">${asset.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
                             </div>
                         ))}
                     </div>
