@@ -8,7 +8,7 @@ export function Header() {
       <div className="flex items-center space-x-2">
 
         <img
-          src="/logo.svg"
+          src="/logo-line-white.svg"
           alt="Logo SVG"
           className="h-[70px] w-[70px]"  // 或者根据实际文字大小调整
         />
