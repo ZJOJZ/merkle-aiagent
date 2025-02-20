@@ -88,7 +88,7 @@ export function Dashboard() {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        {assets.map((asset, index) => (
+                        {assets.map((asset: Asset, index: number) => (
                             <div key={index} className="grid grid-cols-4 items-center">
                                 <div>{asset.symbol}</div>
                                 {/* <div className="font-mono">{asset.address}</div> */}
