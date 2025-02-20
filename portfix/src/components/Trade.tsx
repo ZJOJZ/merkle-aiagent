@@ -1,17 +1,22 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+// import { TokenIcon } from '@web3icons/react'
 
 interface TradeCardProps {
     symbol: string;
-    percent: number;
+    amount: number;
+    totalAmount: number;
     leverageDefault: number;
-    position: 'long' | 'short' | null;  // 新增 position 属性
+    position: 'long' | 'short' | null;
     isExpanded: boolean;
     onToggle: () => void;
 }
 
-const TradeCard = ({ symbol, percent, leverageDefault, position, isExpanded, onToggle }: TradeCardProps) => {
+const TradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isExpanded, onToggle }: TradeCardProps) => {
+    // 计算百分比
+    const percent = totalAmount > 0 ? amount / totalAmount : 0;
+
     return (
         <div
             className="border-2 border-white/20 rounded-lg bg-card/50 overflow-hidden cursor-pointer"
@@ -35,7 +40,6 @@ const TradeCard = ({ symbol, percent, leverageDefault, position, isExpanded, onT
                                 position === 'short' ? 'text-red-500' :
                                     symbol.startsWith('ETH') ? 'text-blue-500' : 'text-orange-500'
                         }>
-                            {symbol.startsWith('ETH') ? '◆' : '₿'}
                         </span>
                         <span className="font-medium">{symbol}</span>
                         {position && (
@@ -113,45 +117,51 @@ export const Trade = () => {
         setExpandedCard(expandedCard === symbol ? null : symbol);
     };
 
-    // 定义卡片数据并按百分比排序
+    // 定义卡片数据
     const cards = [
         {
             symbol: "ETH",
-            percent: 0.56,
-            leverageDefault: 2.5,
-            position: 'long',
+            amount: 4725,
+            leverageDefault: 2,
+            position: 'long' as const,
         },
         {
             symbol: "BTC",
-            percent: 0.44,
-            leverageDefault: 1.5,
-            position: 'short',
+            amount: 6150,
+            leverageDefault: 1,
+            position: 'short' as const,
         },
         {
             symbol: "APT",
-            percent: 0.01,
-            leverageDefault: 1.5,
-            position: 'long',
+            amount: 250,
+            leverageDefault: 2,
+            position: 'long' as const,
         },
         {
             symbol: "SUI",
-            percent: 0.01,
-            leverageDefault: 1.5,
-            position: 'long',
+            amount: 250,
+            leverageDefault: 2,
+            position: 'long' as const,
         },
         {
             symbol: "TRUMP",
-            percent: 0.01,
-            leverageDefault: 1.5,
-            position: 'long',
+            amount: 250,
+            leverageDefault: 2,
+            position: 'long' as const,
         },
         {
             symbol: "DOGE",
-            percent: 0.01,
-            leverageDefault: 1.5,
-            position: 'long',
+            amount: 250,
+            leverageDefault: 2,
+            position: 'long' as const,
         },
-    ].sort((a, b) => b.percent - a.percent); // 按百分比降序排序
+    ];
+
+    // 计算总金额
+    const totalAmount = cards.reduce((sum, card) => sum + card.amount, 0);
+
+    // 按金额排序
+    const sortedCards = [...cards].sort((a, b) => b.amount - a.amount);
 
     return (
         <div className="mt-4 mr-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] border-2 border-white/50">
@@ -160,17 +170,36 @@ export const Trade = () => {
                 <span className="text-blue-500">→</span>
             </div>
             <div className="space-y-2">
-                {cards.map(card => (
+                {sortedCards.map(card => (
                     <TradeCard
                         key={card.symbol}
                         symbol={card.symbol}
-                        percent={card.percent}
+                        amount={card.amount}
+                        totalAmount={totalAmount}
                         leverageDefault={card.leverageDefault}
-                        position={card.position as 'long' | 'short' | null}
+                        position={card.position}
                         isExpanded={expandedCard === card.symbol}
                         onToggle={() => handleToggle(card.symbol)}
                     />
                 ))}
+            </div>
+            {/* 添加底部栏 */}
+            <div className="mt-4 pt-4 border-t border-white/20">
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                        <span className="text-gray-400">Total Amount:</span>
+                        <span className="text-xl font-bold">{totalAmount.toLocaleString()}</span>
+                    </div>
+                    <button
+                        className="px-8 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium"
+                        onClick={() => {
+                            // 处理确认逻辑
+                            console.log('Confirmed');
+                        }}
+                    >
+                        Confirm
+                    </button>
+                </div>
             </div>
         </div>
     );
