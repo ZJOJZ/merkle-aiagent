@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 // import { TokenIcon } from '@web3icons/react'
+import { Input } from "@/components/ui/input"
+
 
 interface TradeCardProps {
     symbol: string;
@@ -159,6 +161,7 @@ export const Trade = () => {
 
     // 计算总金额
     const totalAmount = cards.reduce((sum, card) => sum + card.amount, 0);
+    const [inputAmount, setInputAmount] = useState(totalAmount.toString())
 
     // 按金额排序
     const sortedCards = [...cards].sort((a, b) => b.amount - a.amount);
@@ -187,14 +190,24 @@ export const Trade = () => {
             <div className="mt-4 pt-4 border-t border-white/20">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                        <span className="text-gray-400">Total Amount:</span>
-                        <span className="text-xl font-bold">{totalAmount.toLocaleString()}</span>
+                        <span className="text-gray-400 text-xl">Total Amount:</span>
+                        <Input
+                            type="text"
+                            value={inputAmount}
+                            onChange={(e) => {
+                                // 只允许输入数字和小数点
+                                const value = e.target.value.replace(/[^\d.]/g, '')
+                                setInputAmount(value)
+                            }}
+                            className="w-[100px] text-xl font-bold bg-transparent"
+                        />
+                        <span className="text-gray-400 text-xl">USDC</span>
+
                     </div>
                     <button
-                        className="px-8 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium"
+                        className="px-8 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium text-xl"
                         onClick={() => {
-                            // 处理确认逻辑
-                            console.log('Confirmed');
+                            console.log('Confirmed with amount:', inputAmount)
                         }}
                     >
                         Confirm
