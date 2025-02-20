@@ -1,6 +1,45 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from 'react'
 
+interface Asset {
+    symbol: string
+    address: string
+    amount: number
+    value: number
+}
 export function Dashboard() {
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // 生成一个随机波动值（比如在 -50 到 50 之间）
+            const fluctuation = (Math.random() - 0.5) * 100
+            setPrice((prev: number) => +(prev + fluctuation).toFixed(2))
+        }, 500)  // 每500毫秒执行一次
+
+        // 清理函数
+        return () => clearInterval(interval)
+    }, [])
+
+    const [price, setPrice] = useState(11875.00)
+    const [assets, setAssets] = useState<Asset[]>([
+        { symbol: 'BTC/USDC', address: '0x1234...5678', amount: 0.15, value: 6150 },
+        { symbol: 'ETH/USDC', address: '0xabcd...efgh', amount: 2.5, value: 4725 },
+        { symbol: 'SUI/USDC', address: '0x2345...6789', amount: 100, value: 1500 },
+        { symbol: 'DOGE/USDC', address: '0x3456...7890', amount: 1000, value: 800 },
+        { symbol: 'APT/USDC', address: '0x4567...8901', amount: 50, value: 2000 },
+        { symbol: 'TRUMP/USDC', address: '0x5678...9012', amount: 200, value: 1200 }
+    ])
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setAssets(prevAssets => prevAssets.map(asset => ({
+                ...asset,
+                value: +(asset.value + (Math.random() - 0.5) * 100).toFixed(2)
+            })))
+        }, 500)
+
+        return () => clearInterval(interval)
+    }, [])
+
     return (
         <div className=" mt-4 ml-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] max-h-[800px] overflow-auto border-2 border-white/50">
             <div className="flex items-center justify-between">
@@ -26,7 +65,9 @@ export function Dashboard() {
                         </svg>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">$11,875.00</div>
+                        <div className="text-2xl font-bold">
+                            ${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 3 })}
+                        </div>
                     </CardContent>
                 </Card>
 
@@ -47,24 +88,14 @@ export function Dashboard() {
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        <div className="grid grid-cols-4 items-center">
-                            <div className="flex items-center gap-2">
-                                <span className="text-blue-500">◆</span>
-                                ETH/USDC
+                        {assets.map((asset, index) => (
+                            <div key={index} className="grid grid-cols-4 items-center">
+                                <div>{asset.symbol}</div>
+                                {/* <div className="font-mono">{asset.address}</div> */}
+                                <div>position: {asset.amount}</div>
+                                <div>value: ${asset.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
                             </div>
-                            <div className="font-mono">0x1234...5678</div>
-                            <div>2.5</div>
-                            <div>$4,725.00</div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center">
-                            <div className="flex items-center gap-2">
-                                <span className="text-orange-500">₿</span>
-                                BTC/USDC
-                            </div>
-                            <div className="font-mono">0xabcd...efgh</div>
-                            <div>0.15</div>
-                            <div>$6,150.00</div>
-                        </div>
+                        ))}
                     </div>
                 </CardContent>
             </Card>
