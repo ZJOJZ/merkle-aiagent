@@ -26,7 +26,7 @@ With the recommendation in hand, users can quickly select whether to Long or Sho
 
 ## Run App
 ```bash
-# change directory to project
+# change directory to project portfix
 cd portfix 
 # install dependencies
 npm install
