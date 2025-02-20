@@ -57,6 +57,7 @@ function App() {
           </Button>
           {showDetails && (
             <>
+              <MerkleTrade />
               <WalletDetails />
               <NetworkInfo />
               <AccountInfo />
