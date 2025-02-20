@@ -113,12 +113,12 @@ function App() {
                 </Button>
                 {showDetails && (
                   <>
-                    <MerkleTrade />
+                    {/* <MerkleTrade /> */}
                     <WalletDetails />
                     <NetworkInfo />
                     <AccountInfo />
-                    <TransferAPT />
-                    <MessageBoard />
+                    {/* <TransferAPT /> */}
+                    {/* <MessageBoard /> */}
                   </>
                 )}</div>
 
