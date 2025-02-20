@@ -51,6 +51,24 @@ export async function OpenPosition(token: string, amount: bigint, side: boolean,
     //   };
 };
 
+
+export async function getPositions(address: AccountAddressInput, merkle: MerkleClient) {
+    const positions = await merkle.getPositions({
+        address: `0x${address}`,
+    });
+    //const position = positions.find((position) =>
+    //    position.pairType.endsWith(token),
+    //);
+    return positions;
+}
+
+export async function getBalance(address: AccountAddressInput, merkle: MerkleClient) {
+    const usdcBalance = await merkle.getUsdcBalance({
+        accountAddress: address,
+    });
+    return Number(usdcBalance) / 1e6
+}
+
 // export async function CloseAllPosition(token: string, account: Account, merkle: MerkleClient) {
 //     const positions = await merkle.getPositions({
 //         address: account.accountAddress.toString(),
