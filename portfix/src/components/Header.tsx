@@ -8,11 +8,12 @@ export function Header({ connected }: { connected: boolean }) {
       <div className="flex items-center space-x-2">
 
         {connected && (
-          <div><img
-            src="/logo-line-white.svg"
-            alt="Logo SVG"
-            className="h-[70px] w-[70px]"  // 或者根据实际文字大小调整
-          />
+          <div className="flex flex-row items-center space-x-2">
+            <img
+              src="/logo-line-white.svg"
+              alt="Logo SVG"
+              className="h-[70px] w-[70px]"  // 或者根据实际文字大小调整
+            />
             <h1 className="display text-[32px]">PortfiX</h1>
           </div>
         )
