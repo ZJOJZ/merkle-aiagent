@@ -19,7 +19,7 @@ With the recommendation in hand, users can quickly select whether to Long or Sho
 - `Next.js` + `React` framework
 - Styling: `shadcn/ui` + `tailwind`
 - Aptos Network Integration & Support: `Aptos TS SDK` + `Aptos Wallet Adapter`
-- Move AI Agent Integration: [`Move-Agent-Kit`](https://github.com/Metamove/move-agent-kit)
+- Move AI Agent Integration: [`Move-Agent-Kit`](https://github.com/Metamove/move-agent-kit) (Check out [`@component/MoveAIAgent`](./portfix/src/components/MoveAIAgent.tsx))
 - Merkle Trade Integration: [`Merkle-TS-SDK`](https://github.com/merkle-trade/merkle-ts-sdk)
 - The tool utilizes [aptos-cli npm package](https://github.com/aptos-labs/aptos-cli) that lets us run Aptos CLI and `Node based Move commands` in a Node environment.
 - [Next-pwa](https://ducanh-next-pwa.vercel.app/)
@@ -32,7 +32,7 @@ cd portfix
 npm install
 # run dev
 npm run dev
-``
+```
 - Don't forget to rename `example.env` to `.env` and add your API key
 
 ## What Move commands are available?
