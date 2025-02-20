@@ -52,7 +52,7 @@ function App() {
             <div className="relative space-y-8 text-center p-8">
               <div className="space-y-4">
                 <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-cyan-500 animate-gradient">
-                  Welcome to PortFix
+                  Welcome to Portfix
                 </h1>
                 <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
                   Your gateway to next-generation decentralized trading and portfolio management
