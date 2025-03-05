@@ -1,43 +1,65 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useState, useEffect } from 'react'
+import {getTokenPosition, getBalance } from "@/entry-functions/merkleTrade"
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { MerkleClient, MerkleClientConfig} from "@merkletrade/ts-sdk";
 
 interface Asset {
     symbol: string
+    token: string
     address: string
-    amount: number
-    value: number
+    amount: bigint
+    avg_price: number
 }
+
+const merkle = new MerkleClient(await MerkleClientConfig.testnet());
+
+
+
 export function Dashboard() {
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // 生成一个随机波动值（比如在 -50 到 50 之间）
-            const fluctuation = (Math.random() - 0.5) * 100
-            setPrice((prev: number) => +(prev + fluctuation).toFixed(2))
-        }, 500)  // 每500毫秒执行一次
-
-        // 清理函数
-        return () => clearInterval(interval)
-    }, [])
-
-    const [price, setPrice] = useState(11875.00)
+    const { account, signAndSubmitTransaction } = useWallet(); 
+    if (!account) {
+        return;
+    }   
+    
+    const [price, setPrice] = useState<number>(0)
     const [assets, setAssets] = useState<Asset[]>([
-        { symbol: 'BTC/USDC', address: '0x1234...5678', amount: 0.15, value: 6150 },
-        { symbol: 'ETH/USDC', address: '0xabcd...efgh', amount: 2.5, value: 4725 },
-        { symbol: 'SUI/USDC', address: '0x2345...6789', amount: 100, value: 1500 },
-        { symbol: 'DOGE/USDC', address: '0x3456...7890', amount: 1000, value: 800 },
-        { symbol: 'APT/USDC', address: '0x4567...8901', amount: 50, value: 2000 },
-        { symbol: 'TRUMP/USDC', address: '0x5678...9012', amount: 200, value: 1200 }
+        { symbol: 'BTC/USDC', token:'BTC_USD', address: '0x1234...5678', amount: 0n, avg_price: 0 },
+        { symbol: 'ETH/USDC', token:'ETH_USD', address: '0xabcd...efgh', amount: 0n, avg_price: 0 },
+        { symbol: 'SUI/USDC', token:'SUI_USD', address: '0x2345...6789', amount: 0n, avg_price: 0 },
+        { symbol: 'DOGE/USDC', token:'DOGE_USD', address: '0x3456...7890', amount: 0n, avg_price: 0 },
+        { symbol: 'APT/USDC', token:'APT_USD', address: '0x4567...8901', amount: 0n, avg_price: 0 },
+        { symbol: 'TRUMP/USDC', token:'TRUMP_USD', address: '0x5678...9012', amount: 0n, avg_price: 0 }
     ])
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setAssets(prevAssets => prevAssets.map(asset => ({
-                ...asset,
-                value: +(asset.value + (Math.random() - 0.5) * 100).toFixed(2)
-            })))
-        }, 500)
+    const updateAsset = async (token: string) => {
+        const [size, price] = await getTokenPosition(token, account.address, merkle)
+        console.log(size,price);
+        const newprice = Number(price) / Number(10000000000);
+        console.log(newprice, token);
+        setAssets(prevAssets =>
+          prevAssets.map(asset =>
+            asset.token === token
+              ? { ...asset, amount: BigInt(size) / 1_000_000n , avg_price: newprice}
+              : asset
+          )
+        );
+      };
 
-        return () => clearInterval(interval)
+    useEffect(() => {
+        const myFunction = async () => {
+            const nowbalance = await getBalance(account.address, merkle)
+            setPrice(nowbalance)
+            await updateAsset("BTC_USD")
+            await updateAsset("ETH_USD")
+            await updateAsset("SUI_USD")
+            await updateAsset("APT_USD")
+            await updateAsset("DOGE_USD")
+            await updateAsset("TRUMP_USD")
+        }
+        const intervalId = setInterval(myFunction, 5000);
+    
+        return () => clearInterval(intervalId);
     }, [])
 
     return (
@@ -92,8 +114,10 @@ export function Dashboard() {
                             <div key={index} className="grid grid-cols-4 items-center">
                                 <div>{asset.symbol}</div>
                                 {/* <div className="font-mono">{asset.address}</div> */}
-                                <div>position: {asset.amount}</div>
-                                <div>value: ${asset.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                                <div>position: {asset.amount.toLocaleString('en-US')}</div>
+                                <div style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                                    avg_price: ${asset.avg_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                </div>
                             </div>
                         ))}
                     </div>
