@@ -1,4 +1,4 @@
-import { MerkleClient} from "@merkletrade/ts-sdk";
+import { MerkleClient, Position} from "@merkletrade/ts-sdk";
 import { Aptos, type InputEntryFunctionData, SimpleTransaction} from "@aptos-labs/ts-sdk";
 import {AccountAddressInput} from "@aptos-labs/ts-sdk";
 //import type { InputTransactionData } from "@aptos-labs/wallet-adapter-react";
@@ -50,6 +50,29 @@ export async function OpenPosition(token: string, amount: bigint, side: boolean,
     //     },
     //   };
 };
+
+
+export async function getTokenPosition(token: string, address: AccountAddressInput, merkle: MerkleClient) {
+    const positions = await merkle.getPositions({
+        address: `${address}` as `0x${string}`,
+    });
+    const position = positions.find((position) =>
+       position.pairType.endsWith(token),
+    );
+    if(!position)
+        return[0,0]
+    if(position.isLong)
+        return [position.size, position.avgPrice];
+    else 
+        return [-position.size, position.avgPrice];
+}
+
+export async function getBalance(address: AccountAddressInput, merkle: MerkleClient) {
+    const usdcBalance = await merkle.getUsdcBalance({
+        accountAddress: address,
+    });
+    return Number(usdcBalance) / 1e6
+}
 
 // export async function CloseAllPosition(token: string, account: Account, merkle: MerkleClient) {
 //     const positions = await merkle.getPositions({
