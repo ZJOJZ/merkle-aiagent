@@ -6,7 +6,7 @@ export function Welcome() {
     // console.log(theme)
 
     return (
-          <div className="w-full max-w-4xl p-8 relative">
+          <div className="w-full max-w-6xl p-8 relative">
               {/* 主要内容 */}
               <div className="relative space-y-8 text-center p-8">
                 <div className="space-y-4">
@@ -15,16 +15,16 @@ export function Welcome() {
                   <img 
                     src={
                       theme === 'system' 
-                        ? (systemTheme === 'dark' ? "/logo-line-white.svg" : "/logo-line-dark.svg")
-                        : (theme === 'dark' ? "/logo-line-white.svg" : "/logo-line-dark.svg")
+                        ? (systemTheme === 'dark' ? "/logo-archieved/logo-line-white.svg" : "/logo-archieved/logo-line-dark.svg")
+                        : (theme === 'dark' ? "/logo-archieved/logo-line-white.svg" : "/logo-archieved/logo-line-dark.svg")
                     } 
                     alt="Logo SVG" 
-                    className="h-[120px] w-[120px] mx-auto" 
+                    className="w-[200px] mx-auto" 
                   />
                   <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-cyan-500 animate-gradient">
                     Welcome to PortfiX
                   </h1>
-                  <p className="text-xl text-secondary-foreground max-w-2xl mx-auto leading-relaxed">
+                  <p className="text-xl text-secondary-foreground max-w-4xl mx-auto leading-relaxed">
                     Your gateway to next-generation decentralized trading and portfolio management
                   </p>
                 </div>

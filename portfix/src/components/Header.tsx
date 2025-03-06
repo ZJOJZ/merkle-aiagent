@@ -15,22 +15,18 @@ export function Header({ connected }: { connected: boolean }) {
     <div className="flex items-center justify-between px-2 py-8 max-w-screen-xl mx-auto w-full flex-wrap h-[100px]">
       <div className="flex items-center space-x-2">
 
-        {connected && (
-          <div>
+      <div>
             <img 
                     src={
                       theme === 'system' 
-                        ? (systemTheme === 'dark' ? "/logo-line-white.svg" : "/logo-line-dark.svg")
-                        : (theme === 'dark' ? "/logo-line-white.svg" : "/logo-line-dark.svg")
+                        ? (systemTheme === 'dark' ? "/logo/logo-line-white.svg" : "/logo/logo-line-dark.svg")
+                        : (theme === 'dark' ? "/logo/logo-line-white.svg" : "/logo/logo-line-dark.svg")
                     } 
                     alt="Logo SVG" 
-                    className="h-[70px] w-[70px] mx-auto" 
+                    className="h-[50px] mx-auto" 
                   />
             {/* <h1 className="display text-[32px]">PortfiX</h1> */}
           </div>
-        )
-
-        }
 
       </div>
 
