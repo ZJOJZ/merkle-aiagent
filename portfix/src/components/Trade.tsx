@@ -131,12 +131,22 @@ const TradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isE
     );
 };
 
-const merkle = new MerkleClient(await MerkleClientConfig.testnet());
+let merkle: MerkleClient;
 
 export const Trade = () => {
     const [expandedCard, setExpandedCard] = useState<string | null>(null);
     const queryClient = useQueryClient();
+    const [isClientReady, setIsClientReady] = useState<boolean>(false);
 
+    useEffect(() => {
+        const initMerkle = async () => {
+            merkle = new MerkleClient(await MerkleClientConfig.testnet());
+            setIsClientReady(true);
+        };
+        
+        initMerkle();
+    }, []);
+    
     const handleToggle = (symbol: string) => {
         setExpandedCard(expandedCard === symbol ? null : symbol);
     };
@@ -212,8 +222,8 @@ export const Trade = () => {
     
     const onClickButton = async () => {
         console.log(totalAmount)
-        if (!account) {
-          return;
+        if (!account || !isClientReady) {
+            return;
         }
     
         try {

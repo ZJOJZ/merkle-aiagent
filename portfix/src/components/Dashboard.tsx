@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Landmark, TrendingUp, ArrowDownUp} from "lucide-react"
 
-
 import { useState, useEffect } from 'react'
 import { getTokenPosition, getBalance } from "@/entry-functions/merkleTrade"
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
@@ -15,17 +14,12 @@ interface Asset {
     avg_price: number
 }
 
-const merkle = new MerkleClient(await MerkleClientConfig.testnet());
-
-
+let merkle: MerkleClient;
 
 export function Dashboard() {
     const { account, signAndSubmitTransaction } = useWallet(); 
-    if (!account) {
-        return;
-    }   
-    
-    const [price, setPrice] = useState<number>(0)
+    const [isClientReady, setIsClientReady] = useState<boolean>(false);
+    const [price, setPrice] = useState<number>(0);
     const [assets, setAssets] = useState<Asset[]>([
         { symbol: 'BTC/USDC', token:'BTC_USD', address: '0x1234...5678', amount: 0n, avg_price: 0 },
         { symbol: 'ETH/USDC', token:'ETH_USD', address: '0xabcd...efgh', amount: 0n, avg_price: 0 },
@@ -33,9 +27,20 @@ export function Dashboard() {
         { symbol: 'DOGE/USDC', token:'DOGE_USD', address: '0x3456...7890', amount: 0n, avg_price: 0 },
         { symbol: 'APT/USDC', token:'APT_USD', address: '0x4567...8901', amount: 0n, avg_price: 0 },
         { symbol: 'TRUMP/USDC', token:'TRUMP_USD', address: '0x5678...9012', amount: 0n, avg_price: 0 }
-    ])
+    ]);
+
+    useEffect(() => {
+        const initMerkle = async () => {
+            merkle = new MerkleClient(await MerkleClientConfig.testnet());
+            setIsClientReady(true);
+        };
+        
+        initMerkle();
+    }, []);
 
     const updateAsset = async (token: string) => {
+        if (!account || !isClientReady) return;
+        
         const [size, price] = await getTokenPosition(token, account.address, merkle)
         console.log(size,price);
         const newprice = Number(price) / Number(10000000000);
@@ -47,9 +52,11 @@ export function Dashboard() {
               : asset
           )
         );
-      };
+    };
 
     useEffect(() => {
+        if (!account || !isClientReady) return;
+
         const myFunction = async () => {
             const nowbalance = await getBalance(account.address, merkle)
             setPrice(nowbalance)
@@ -60,10 +67,16 @@ export function Dashboard() {
             await updateAsset("DOGE_USD")
             await updateAsset("TRUMP_USD")
         }
+        
+        myFunction(); // 立即执行一次
         const intervalId = setInterval(myFunction, 5000);
     
         return () => clearInterval(intervalId);
-    }, [])
+    }, [account, isClientReady]); // 添加依赖项
+
+    if (!account || !isClientReady) {
+        return null;
+    }
 
     return (
         <div className=" mt-4 ml-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] max-h-[800px] overflow-auto border-2 border-white/50">
