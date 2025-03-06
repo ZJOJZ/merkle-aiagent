@@ -1,3 +1,6 @@
+// import ui components
+import { ModeToggle } from '@/components/theme-toggle';
+
 import { WalletSelector } from "./WalletSelector";
 // import Logo from "@/assets/logo.svg"
 // import Logo from "@/components/Logo.png";
@@ -21,10 +24,12 @@ export function Header({ connected }: { connected: boolean }) {
         }
 
       </div>
-      {/* <img src={Logo} alt="PortfiX Logo" className="w-8 h-8" /> */}
-      {/* <img src={Logo} alt="PortfiX Logo" className="w-8 h-8" /> */}
+
       <div className="flex gap-2 items-center flex-wrap">
-        <WalletSelector />
+        <div className="flex items-center space-x-2">
+          <ModeToggle />
+          <WalletSelector />
+        </div>
       </div>
     </div >
   );

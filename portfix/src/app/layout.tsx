@@ -7,6 +7,8 @@ import { WalletProvider } from "@/components/WalletProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { WrongNetworkAlert } from "@/components/WrongNetworkAlert";
 
+import { ThemeProvider } from "@/components/theme-provider"
+
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -27,15 +29,24 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en" className={spaceGrotesk.className}>
+    <html lang="en" className={spaceGrotesk.className} suppressHydrationWarning>
       <body>
-        <WalletProvider>
-          <ReactQueryProvider>
-            <div id="root">{children}</div>
-            <WrongNetworkAlert />
-            <Toaster />
-          </ReactQueryProvider>
-        </WalletProvider>
+      <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+          
+          <WalletProvider>
+            <ReactQueryProvider>
+              <div id="root">{children}</div>
+              <WrongNetworkAlert />
+              <Toaster />
+            </ReactQueryProvider>
+          </WalletProvider>
+
+        </ThemeProvider>
       </body>
     </html>
   );
