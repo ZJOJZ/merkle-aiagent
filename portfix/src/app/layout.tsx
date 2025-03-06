@@ -9,9 +9,9 @@ import { WrongNetworkAlert } from "@/components/WrongNetworkAlert";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  applicationName: "Aptos Boilerplate Template",
-  title: "NextJS Boilerplate Template",
-  description: "Aptos Boilerplate Template",
+  applicationName: "PortfiX",
+  title: "PortfiX",
+  description: "Your next-generation decentralized portfolio AI manager.",
   manifest: "/manifest.json",
 };
 

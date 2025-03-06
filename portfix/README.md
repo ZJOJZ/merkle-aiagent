@@ -14,41 +14,28 @@ For each asset in the portfolio (e.g., ETH/USDC or BTC/USDC), PortfiX’s AI eng
 ### One-Click: Seamless Trade Execution
 With the recommendation in hand, users can quickly select whether to Long or Short each token directly within the platform. After approval, the platform executes trades on Merkle Finance in real-time. The integration with Merkle Finance ensures that trades are executed at lightning speed with minimal slippage.
 
+## Tech Stack
 
-## Create Aptos Dapp Boilerplate Template
-
-The Boilerplate template provides a starter dapp with all necessary dapp infrastructure and a simple wallet info implementation, transfer APT and a simple message board functionality to send and read a message on chain.
-
-## Read the Boilerplate template docs
-To get started with the Boilerplate template and learn more about the template functionality and usage, head over to the [Boilerplate template docs](https://learn.aptoslabs.com/en/dapp-templates/boilerplate-template) 
-
-
-## The Boilerplate template provides:
-
-- **Folder structure** - A pre-made dapp folder structure with a `src` (frontend) and `contract` folders.
-- **Dapp infrastructure** - All required dependencies a dapp needs to start building on the Aptos network.
-- **Wallet Info implementation** - Pre-made `WalletInfo` components to demonstrate how one can use to read a connected Wallet info.
-- **Transfer APT implementation** - Pre-made `transfer` components to send APT to an address.
-- **Message board functionality implementation** - Pre-made `message` components to send and read a message on chain
-
-
-## What tools the template uses?
-
-- React framework
-- shadcn/ui + tailwind for styling
-- Aptos TS SDK
-- Aptos Wallet Adapter
-- Node based Move commands
+- `Next.js` + `React` framework
+- Styling: `shadcn/ui` + `tailwind`
+- Aptos Network Integration & Support: `Aptos TS SDK` + `Aptos Wallet Adapter`
+- Move AI Agent Integration: [`Move-Agent-Kit`](https://github.com/Metamove/move-agent-kit) (Check out [`@component/MoveAIAgent`](./portfix/src/components/MoveAIAgent.tsx))
+- Merkle Trade Integration: [`Merkle-TS-SDK`](https://github.com/merkle-trade/merkle-ts-sdk)
+- The tool utilizes [aptos-cli npm package](https://github.com/aptos-labs/aptos-cli) that lets us run Aptos CLI and `Node based Move commands` in a Node environment.
 - [Next-pwa](https://ducanh-next-pwa.vercel.app/)
 
-## Config
-- rename `example.env` to `.env` and add your API key
+## Run App
+```bash
+# change directory to project portfix
+cd portfix 
+# install dependencies
+npm install
+# run dev
+npm run dev
+```
+- Don't forget to rename `example.env` to `.env` and add your API key
 
 ## What Move commands are available?
-
-The tool utilizes [aptos-cli npm package](https://github.com/aptos-labs/aptos-cli) that lets us run Aptos CLI in a Node environment.
-
-Some commands are built-in the template and can be ran as a npm script, for example:
 
 - `npm run move:publish` - a command to publish the Move contract
 - `npm run move:test` - a command to run Move unit tests
@@ -56,5 +43,3 @@ Some commands are built-in the template and can be ran as a npm script, for exam
 - `npm run move:upgrade` - a command to upgrade the Move contract
 - `npm run dev` - a command to run the frontend locally
 - `npm run deploy` - a command to deploy the dapp to Vercel
-
-For all other available CLI commands, can run `npx aptos` and see a list of all available commands.

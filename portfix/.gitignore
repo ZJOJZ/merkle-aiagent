@@ -35,3 +35,5 @@ pnpm-lock.yaml
 example-collection/
 
 .next
+
+/public/sw.js.map
