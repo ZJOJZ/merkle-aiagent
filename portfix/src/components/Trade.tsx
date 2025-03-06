@@ -1,5 +1,8 @@
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Button } from "@/components/ui/button"
+import { ChevronDown, ChevronUp, AlignHorizontalDistributeCenter } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+
 // import { TokenIcon } from '@web3icons/react'
 import { Input } from "@/components/ui/input"
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
@@ -11,18 +14,25 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 
+/**
+ * TradeCard组件属性接口定义
+ */
 interface TradeCardProps {
-    symbol: string;
-    amount: number;
-    totalAmount: number;
-    leverageDefault: number;
-    position: string;
-    isExpanded: boolean;
-    onToggle: () => void;
+    symbol: string;        // 交易对符号
+    amount: number;        // 交易金额
+    totalAmount: number;   // 总交易金额
+    leverageDefault: number; // 默认杠杆倍数
+    position: string;      // 交易方向(long/short)
+    isExpanded: boolean;   // 是否展开详情
+    onToggle: () => void;  // 展开/收起回调函数
 }
 
+/**
+ * TradeCard组件 - 展示单个交易对的卡片
+ * 包含交易对信息、仓位方向、金额占比和详细信息
+ */
 const TradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isExpanded, onToggle }: TradeCardProps) => {
-    // 计算百分比
+    // 计算当前交易金额占总金额的百分比
     const percent = totalAmount > 0 ? amount / totalAmount : 0;
 
     return (
@@ -80,7 +90,7 @@ const TradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isE
                     >
                         <div className="p-4 space-y-4 border-t border-white/20">
                             <div className="flex gap-2">
-                                <button
+                                <Button
                                     disabled
                                     className={`flex-1 ${position === 'long'
                                         ? 'bg-green-600 text-white'
@@ -88,8 +98,8 @@ const TradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isE
                                         } py-2 rounded-lg cursor-default`}
                                 >
                                     Long
-                                </button>
-                                <button
+                                </Button>
+                                <Button
                                     disabled
                                     className={`flex-1 ${position === 'short'
                                         ? 'bg-red-600 text-white'
@@ -97,7 +107,7 @@ const TradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isE
                                         } py-2 rounded-lg cursor-default`}
                                 >
                                     Short
-                                </button>
+                                </Button>
                             </div>
 
                             <div className="flex items-center justify-between gap-4">
@@ -131,13 +141,24 @@ const TradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isE
     );
 };
 
+// Merkle客户端实例
 let merkle: MerkleClient;
 
+/**
+ * Trade组件 - 主要交易界面
+ * 功能：
+ * 1. 展示多个交易对的卡片列表
+ * 2. 管理交易状态和用户输入
+ * 3. 执行交易操作
+ */
 export const Trade = () => {
+    // 控制展开的卡片
     const [expandedCard, setExpandedCard] = useState<string | null>(null);
     const queryClient = useQueryClient();
+    // Merkle客户端就绪状态
     const [isClientReady, setIsClientReady] = useState<boolean>(false);
 
+    // 初始化Merkle客户端
     useEffect(() => {
         const initMerkle = async () => {
             merkle = new MerkleClient(await MerkleClientConfig.testnet());
@@ -147,34 +168,39 @@ export const Trade = () => {
         initMerkle();
     }, []);
     
+    // 处理卡片展开/收起
     const handleToggle = (symbol: string) => {
         setExpandedCard(expandedCard === symbol ? null : symbol);
     };
 
+    // 用户输入的总金额
     const [totalinput, settotalinput] = useState<number>(0);
-    const [islong1, setLong1] = useState<boolean>(true);
-  const [islong2, setLong2] = useState<boolean>(true);
-  const [islong3, setLong3] = useState<boolean>(true);
-  const [islong4, setLong4] = useState<boolean>(true);
-  const [islong5, setLong5] = useState<boolean>(true);
-  const [islong6, setLong6] = useState<boolean>(true);
-  
-  const [amount1, setTransferAmount1] = useState<number>(0);
-  const [amount2, setTransferAmount2] = useState<number>(0);
-  const [amount3, setTransferAmount3] = useState<number>(0);
-  const [amount4, setTransferAmount4] = useState<number>(0);
-  const [amount5, setTransferAmount5] = useState<number>(0);
-  const [amount6, setTransferAmount6] = useState<number>(0);
-
-  const [lever1, setlever1] = useState<number>(0);
-  const [lever2, setlever2] = useState<number>(0);
-  const [lever3, setlever3] = useState<number>(0);
-  const [lever4, setlever4] = useState<number>(0);
-  const [lever5, setlever5] = useState<number>(0);
-  const [lever6, setlever6] = useState<number>(0);
-  
     
-    // 定义卡片数据
+    // 各交易对的仓位方向状态(long/short)
+    const [islong1, setLong1] = useState<boolean>(true);
+    const [islong2, setLong2] = useState<boolean>(true);
+    const [islong3, setLong3] = useState<boolean>(true);
+    const [islong4, setLong4] = useState<boolean>(true);
+    const [islong5, setLong5] = useState<boolean>(true);
+    const [islong6, setLong6] = useState<boolean>(true);
+    
+    // 各交易对的金额状态
+    const [amount1, setTransferAmount1] = useState<number>(0);
+    const [amount2, setTransferAmount2] = useState<number>(0);
+    const [amount3, setTransferAmount3] = useState<number>(0);
+    const [amount4, setTransferAmount4] = useState<number>(0);
+    const [amount5, setTransferAmount5] = useState<number>(0);
+    const [amount6, setTransferAmount6] = useState<number>(0);
+
+    // 各交易对的杠杆倍数状态
+    const [lever1, setlever1] = useState<number>(0);
+    const [lever2, setlever2] = useState<number>(0);
+    const [lever3, setlever3] = useState<number>(0);
+    const [lever4, setlever4] = useState<number>(0);
+    const [lever5, setlever5] = useState<number>(0);
+    const [lever6, setlever6] = useState<number>(0);
+    
+    // 交易卡片数据配置
     let cards = [
         {
             symbol: "BTC",
@@ -214,12 +240,16 @@ export const Trade = () => {
         },
     ];
     const { account, signAndSubmitTransaction } = useWallet();    
-    // 计算总金额
+    // 计算所有交易的总金额
     const totalAmount = cards.reduce((sum, card) => sum + card.amount, 0);
     
-    // 按金额排序
+    // 按金额大小对卡片进行排序
     const sortedCards = [...cards].sort((a, b) => b.amount - a.amount);
     
+    /**
+     * 处理交易确认按钮点击
+     * 执行多个交易对的开仓操作
+     */
     const onClickButton = async () => {
         console.log(totalAmount)
         if (!account || !isClientReady) {
@@ -227,11 +257,13 @@ export const Trade = () => {
         }
     
         try {
-          const n1 = BigInt(Math.floor(amount1) * totalinput) * 10_000n;
-          if(n1 > 10_000_000n){
-          const transaction = await OpenPosition("BTC_USD", n1, islong1, lever1, account.address, merkle);
-          const committedTransaction = await signAndSubmitTransaction(transaction);
-          const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+            // 依次处理每个交易对的开仓
+            // 计算实际交易金额并执行交易
+            const n1 = BigInt(Math.floor(amount1) * totalinput) * 10_000n;
+            if(n1 > 10_000_000n){
+                const transaction = await OpenPosition("BTC_USD", n1, islong1, lever1, account.address, merkle);
+                const committedTransaction = await signAndSubmitTransaction(transaction);
+                const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
             }
           
             const n2 = BigInt(Math.floor(amount2) * totalinput) * 10_000n;
@@ -325,11 +357,12 @@ export const Trade = () => {
     
 
 
+
     return (
         <div className="mt-4 mr-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] border-2 border-white/50">
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Trade</h2>
-                <span className="text-blue-500">→</span>
+                <AlignHorizontalDistributeCenter />
             </div>
             <div className="space-y-2">
                 {sortedCards.map(card => (

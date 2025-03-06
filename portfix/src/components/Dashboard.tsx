@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Landmark, TrendingUp, ArrowDownUp} from "lucide-react"
+import { Landmark, TrendingUp, ChartPie , WalletMinimal} from "lucide-react"
 
 import { useState, useEffect } from 'react'
 import { getTokenPosition, getBalance } from "@/entry-functions/merkleTrade"
@@ -82,14 +82,14 @@ export function Dashboard() {
         <div className=" mt-4 ml-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] max-h-[800px] overflow-auto border-2 border-white/50">
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Portfolio</h2>
-                <ArrowDownUp />
+                <WalletMinimal />
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
                 <Card className="border-4 border-white/50">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-xl font-medium">Total Value</CardTitle>
-                        <Landmark  className="h-6 w-6" />
+                        <Landmark />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">
@@ -101,7 +101,7 @@ export function Dashboard() {
                 <Card className="border-4 border-white/50">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-xl font-medium">24h Change</CardTitle>
-                        <TrendingUp  className="h-6 w-6" />
+                        <TrendingUp />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold text-green-500">+5.2%</div>
@@ -112,7 +112,7 @@ export function Dashboard() {
             <Card className="border-4 border-white/50">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-xl">Asset Breakdown</CardTitle>
-                    <TrendingUp className="h-6 w-6" />
+                    <ChartPie />
                     {/* <div className="space-y-4"> */}
                     {/* 表头 */}
                 </CardHeader>
