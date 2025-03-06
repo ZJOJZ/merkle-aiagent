@@ -1,4 +1,5 @@
-// 移除"use client"以避免在客户端组件中使用async/await
+"use client"
+
 import React, { useEffect, useState } from "react"; // Import React to define JSX types
 import { Aptos, AptosConfig, Ed25519PrivateKey, Network, PrivateKey, PrivateKeyVariants } from "@aptos-labs/ts-sdk"
 import { AgentRuntime, LocalSigner, createAptosTools } from "move-agent-kit";
