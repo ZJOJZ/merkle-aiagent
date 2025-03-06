@@ -25,7 +25,7 @@ function App() {
     <>
       <Header connected={connected} />
       
-      <div className="flex items-center justify-center flex-col min-h-[calc(100vh-4rem)]">
+      <div className="flex items-center flex-col">
         {connected ? (
           <div className="w-full max-w-7xl p-6">
             <div className="flex flex-row gap-10">
