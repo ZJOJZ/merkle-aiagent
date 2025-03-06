@@ -42,3 +42,6 @@ next-env.d.ts
 
 # llm
 **/.llm
+
+**/public/sw.js*
+**/public/workbox*.js*
