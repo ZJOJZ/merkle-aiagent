@@ -5,7 +5,7 @@ import { AccountInfo } from "@/components/AccountInfo";
 import { Header } from "@/components/Header";
 import { MessageBoard } from "@/components/MessageBoard";
 import { NetworkInfo } from "@/components/NetworkInfo";
-import { TopBanner } from "@/components/TopBanner";
+// import { TopBanner } from "@/components/TopBanner";
 import { TransferAPT } from "@/components/TransferAPT";
 import { WalletDetails } from "@/components/WalletDetails";
 
@@ -20,10 +20,12 @@ import { Button } from "@/components/ui/button";
 import { MerkleTrade } from "@/components/MerkleTrade";
 // Internal Components
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { MoveAIAgent } from '@/components/MoveAIAgent';
 
 function App() {
   const { connected } = useWallet();
   const [showDetails, setShowDetails] = useState(false);
+  const [callAIAgent, setcallAIAgent] = useState(false);
 
   return (
     <>
@@ -125,6 +127,7 @@ function App() {
             </CardContent>
           </Card>
         )}
+
       </div>
     </>
   );
