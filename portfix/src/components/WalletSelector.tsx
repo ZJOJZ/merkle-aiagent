@@ -1,3 +1,6 @@
+// Customized icon
+import { Wallet } from "lucide-react"
+
 // Internal components
 import { Button } from "@/components/ui/button";
 import {
@@ -70,6 +73,7 @@ export function WalletSelector() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button>
+        <Wallet/>
           {account?.ansName || truncateAddress(account?.address) || "Unknown"}
         </Button>
       </DropdownMenuTrigger>
@@ -97,7 +101,7 @@ export function WalletSelector() {
   ) : (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button>Connect a Wallet</Button>
+        <Button><Wallet/> Connect a Wallet</Button>
       </DialogTrigger>
       <ConnectWalletDialog close={closeDialog} />
     </Dialog>
