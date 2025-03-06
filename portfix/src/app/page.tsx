@@ -35,33 +35,27 @@ function App() {
         {connected ? (
           <div className="w-full max-w-7xl p-6">
             <div className="flex flex-row gap-10">
-              <div className="flex-1">
-                <Dashboard />
-              </div>
-              <div className="flex-1">
-                <Trade />
-              </div>
+                    <div className="flex-1">
+                      <Dashboard />
+                    </div>
+                <div className="flex-1">
+                  <Trade />
+                </div>
             </div>
           </div>
         ) : (
           <div className="w-full max-w-4xl p-8 relative">
-            {/* 背景动画效果 */}
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 rounded-lg backdrop-blur-sm">
-              <div className="absolute inset-0 bg-grid-white/[0.02] bg-grid-pattern" />
-            </div>
-
-            {/* 主要内容 */}
-            <div className="relative space-y-8 text-center p-8">
-              <div className="space-y-4">
-                <img src="/logo-line-white.svg" alt="Logo SVG" className="h-[120px] w-[120px] mx-auto" />
-                <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-cyan-500 animate-gradient">
-                  Welcome to Portfix
-                </h1>
-                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-                  Your gateway to next-generation decentralized trading and portfolio management
-                </p>
-              </div>
-
+              {/* 主要内容 */}
+              <div className="relative space-y-8 text-center p-8">
+                <div className="space-y-4">
+                  <img src="/logo-line-white.svg" alt="Logo SVG" className="h-[120px] w-[120px] mx-auto" />
+                  <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-cyan-500 animate-gradient">
+                    Welcome to PortfiX
+                  </h1>
+                  <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                    Your gateway to next-generation decentralized trading and portfolio management
+                  </p>
+                </div>
               <div className="relative group">
                 {/* 外发光效果 */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000" />
@@ -127,7 +121,10 @@ function App() {
             </CardContent>
           </Card>
         )}
-
+      {/* 背景动画效果 */}
+      <div className="fixed inset-0 -z-10 w-screen h-screen bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 backdrop-blur-sm">
+        <div className="absolute inset-0 w-full h-full bg-grid-white/[0.02] bg-grid-pattern" />
+      </div>
       </div>
     </>
   );

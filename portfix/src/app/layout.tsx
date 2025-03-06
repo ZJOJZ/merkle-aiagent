@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { Space_Grotesk } from "next/font/google";
 
 import { ReactQueryProvider } from "@/components/ReactQueryProvider";
 import { WalletProvider } from "@/components/WalletProvider";
@@ -7,6 +8,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { WrongNetworkAlert } from "@/components/WrongNetworkAlert";
 
 import "./globals.css";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   applicationName: "PortfiX",
@@ -21,7 +27,7 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={spaceGrotesk.className}>
       <body>
         <WalletProvider>
           <ReactQueryProvider>
