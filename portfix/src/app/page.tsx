@@ -4,14 +4,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-
-
 // Main Components
 import { Header } from "@/components/Header";
 import { Welcome } from '@/components/Welcome';
-import { Dashboard } from "@/components/Dashboard";
-import { Trade } from "@/components/Trade";
-import { MerkleTrade } from "@/components/MerkleTrade";
+import { Platform } from "@/components/Main";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { MoveAIAgent } from '@/components/MoveAIAgent';
 import { AccountDetails } from '@/components/AccountDetails';
@@ -25,19 +21,10 @@ function App() {
       
       <div className="flex items-center flex-col">
         {connected ? (
-          <div className="w-full max-w-7xl p-6">
-            <div className="flex flex-row gap-10">
-                    <div className="flex-1">
-                      <Dashboard />
-                    </div>
-                <div className="flex-1">
-                  <Trade />
-                </div>
-            </div>
-          </div>
+          <Platform />
         ) : (
           // Welcome Page to guide connect wallet - @Runze
-            <Welcome />
+          <Welcome />
         )}
 
         {connected && (

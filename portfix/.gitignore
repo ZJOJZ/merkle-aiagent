@@ -36,4 +36,5 @@ example-collection/
 
 .next
 
-/public/sw.js.map
+**/public/sw.js*
+**/public/workbox*.js*
