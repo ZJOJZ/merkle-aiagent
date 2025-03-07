@@ -67,34 +67,12 @@ def get_extended_market_data():
     return market_data
 
 
-def test_trading_actions_generation():
-    """Test the generation of trading actions with actual API calls"""
-    # Load environment variables
-    load_env_variables()
-
-    # Get API key from environment
-    api_key = os.environ.get("DEEPSEEK_API_KEY")
-    if not api_key:
-        logger.error("DEEPSEEK_API_KEY not found in environment variables")
-        return False
-
-    # Create output directory if it doesn't exist
-    os.makedirs("portfolio_generator/output", exist_ok=True)
-
-    # Initialize the trading agent
-    output_file = "portfolio_generator/output/test_api_results.jsonl"
-    logger.info(f"Initializing TradingAgent with output file: {output_file}")
-
-    try:
-        agent = TradingAgent(output_file=output_file, api_key=api_key)
-        logger.info("TradingAgent initialized successfully")
-    except Exception as e:
-        logger.error(f"Failed to initialize TradingAgent: {str(e)}")
-        return False
+def start_trading_actions_generation(agent: TradingAgent, output_file: str):
+    """Start the generation of trading actions with actual API calls"""
 
     market_data = get_market_indicators()
     logger.info(market_data)
-
+    
     # Generate trading actions
     logger.info("Generating trading actions...")
     start_time = time.time()
@@ -177,22 +155,43 @@ def test_trading_actions_generation():
     except Exception as e:
         logger.error(f"Failed to save pretty-printed results: {str(e)}")
 
-    logger.info("Test completed successfully")
     return True
 
 
 def main():
     """Main function to run the test"""
-    logger.info("Starting API test for TradingAgent")
+    logger.info("Starting TradingAgent")
 
-    success = test_trading_actions_generation()
+    # Load environment variables
+    load_env_variables()
 
-    if success:
-        logger.info("✅ All tests passed!")
-        return 0
-    else:
-        logger.error("❌ Test failed!")
-        return 1
+    # Get API key from environment
+    api_key = os.environ.get("DEEPSEEK_API_KEY")
+    if not api_key:
+        logger.error("DEEPSEEK_API_KEY not found in environment variables")
+        return False
+
+    # Create output directory if it doesn't exist
+    os.makedirs("portfolio_generator/output", exist_ok=True)
+
+    # Initialize the trading agent
+    output_file = "portfolio_generator/output/test_api_results.jsonl"
+    logger.info(f"Initializing TradingAgent with output file: {output_file}")
+
+    try:
+        agent = TradingAgent(output_file=output_file, api_key=api_key)
+        logger.info("TradingAgent initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize TradingAgent: {str(e)}")
+        return False
+    while True:
+        success = start_trading_actions_generation(agent, output_file)
+        if success:
+            break
+        else:
+            logger.info("Failed to generate trading actions, retrying...")
+            time.sleep(10)
+        time.sleep(60)
 
 
 if __name__ == "__main__":

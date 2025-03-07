@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from typing import Dict, List
 import talib  # 需要先安装: pip install talib-binary
+import time
 
 class MarketAnalyzer:
     def __init__(self):
@@ -224,46 +225,55 @@ class MarketAnalyzer:
         if indicators['macd_hist'].iloc[-1] > 0: trend_strength += 1
         if adx_current > 25: trend_strength += 1
         
-        # 综合评估
-        signals.append("\n总体趋势评估:")
-        if trend_strength >= 4:
-            signals.append("强烈看涨信号")
-        elif trend_strength >= 3:
-            signals.append("偏向看涨")
-        elif trend_strength <= 1:
-            signals.append("强烈看跌信号")
-        else:
-            signals.append("偏向看跌")
+        # # 综合评估
+        # signals.append("\n总体趋势评估:")
+        # if trend_strength >= 4:
+        #     signals.append("强烈看涨信号")
+        # elif trend_strength >= 3:
+        #     signals.append("偏向看涨")
+        # elif trend_strength <= 1:
+        #     signals.append("强烈看跌信号")
+        # else:
+        #     signals.append("偏向看跌")
             
-        # 波动性分析
-        atr_current = indicators['atr'].iloc[-1]
-        atr_avg = indicators['atr'].mean()
-        if atr_current > atr_avg * 1.5:
-            signals.append("\n警告: 当前市场波动性较大，建议谨慎操作")
+        # # 波动性分析
+        # atr_current = indicators['atr'].iloc[-1]
+        # atr_avg = indicators['atr'].mean()
+        # if atr_current > atr_avg * 1.5:
+        #     signals.append("\n警告: 当前市场波动性较大，建议谨慎操作")
             
         return "\n".join(signals)
 
-def main():
-    analyzer = MarketAnalyzer()
-    symbol = "MELANIA_USD"
-    # 获取最近24小时的数据
-    current_time = int(time.time() * 1000)
-    from_time = current_time - (2 * 24 * 60 * 60 * 1000)  # 48小时前
-    
-    # 获取数据
-    df = analyzer.fetch_kline_data(symbol, from_time, current_time)
-    
-    # 计算指标
-    indicators = analyzer.calculate_technical_indicators(df)
-    
-    # print(indicators)
-    # 分析走势
-    analysis = analyzer.analyze_trend(df, indicators)
-    
-    print("市场分析结果：")
-    print(analysis)
+    def analyze_market(self,symbol: str):
+        # 获取最近24小时的数据
+        current_time = int(time.time() * 1000)
+        from_time = current_time - (2 * 24 * 60 * 60 * 1000)  # 48小时前
+        
+        # 获取数据
+        df = self.fetch_kline_data(symbol, from_time, current_time)
+        
+        # 计算指标
+        indicators = self.calculate_technical_indicators(df)
+        
+        # Format float values to 2 decimal places
+        formatted_indicators = {k: round(float(v), 2) if pd.notna(v) else v 
+                            for k, v in indicators.iloc[-1].to_dict().items()}
+        # 分析走势
+        analysis = self.analyze_trend(df, indicators)
+        
+        formatted_indicators["summary"]="。".join(analysis.split("\n"))
+        return formatted_indicators
+
+def get_market_indicators():
+    total_indicators = []
+    for symbol in ["BTC_USD", "ETH_USD", "APT_USD", "SUI_USD","TRUMP_USD"]:
+        formatted_indicators = MarketAnalyzer().analyze_market(symbol)
+        formatted_indicators["symbol"] = symbol
+        total_indicators.append(formatted_indicators)
+    return total_indicators
 
 if __name__ == "__main__":
     import time
-    main()
+    total_indicators = get_market_indicators()
+    print(total_indicators)
 

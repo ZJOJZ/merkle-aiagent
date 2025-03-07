@@ -35,6 +35,17 @@ npm run dev
 ```
 - Don't forget to rename `example.env` to `.env` and add your API key
 
+## Run Backend (Portfolio Generator)    
+```bash
+# install dependencies
+pip install -r portfolio_generator/requirements.txt
+# for test
+python -m portfolio_generator.test_api
+# for running
+python -m portfolio_generator.main
+
+```
+
 ## What Move commands are available?
 
 - `npm run move:publish` - a command to publish the Move contract
