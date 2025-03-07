@@ -6,21 +6,22 @@ from datetime import datetime
 from dotenv import load_dotenv
 import logging
 import sys
-from .MarketAnalyzer import get_market_indicators
+from MarketAnalyzer import get_market_indicators
 
+os.makedirs("./data-process/output", exist_ok=True)
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("./output/main.log", mode="w"),
+        logging.FileHandler("./data-process/output/main.log", mode="w"),
     ],
 )
 logger = logging.getLogger("main")
 
 # Import the TradingAgent and sample market data function
-from .generator import TradingAgent, get_sample_market_data
+from generator import TradingAgent, get_sample_market_data
 
 
 def load_env_variables():
@@ -167,11 +168,9 @@ def main():
         logger.error("DEEPSEEK_API_KEY not found in environment variables")
         return False
 
-    # Create output directory if it doesn't exist
-    os.makedirs("./output", exist_ok=True)
 
     # Initialize the trading agent
-    output_file = "./output/result.jsonl"
+    output_file = "./public/result.jsonl"
     logger.info(f"Initializing TradingAgent with output file: {output_file}")
 
     try:

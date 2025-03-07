@@ -8,13 +8,14 @@ import logging
 import sys
 from MarketAnalyzer import get_market_indicators
 
+os.makedirs("./data-process/output", exist_ok=True)
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("./output/test_api.log", mode="w"),
+        logging.FileHandler("./data-process/output/test_api.log", mode="w"),
     ],
 )
 logger = logging.getLogger("test_api")
@@ -75,10 +76,10 @@ def test_trading_actions_generation():
         return False
 
     # Create output directory if it doesn't exist
-    os.makedirs("./output", exist_ok=True)
+    os.makedirs("./data-process/output", exist_ok=True)
 
     # Initialize the trading agent
-    output_file = "./output/test_api_results.jsonl"
+    output_file = "./data-process/output/test_api_results.jsonl"
     logger.info(f"Initializing TradingAgent with output file: {output_file}")
 
     try:

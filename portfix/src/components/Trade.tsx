@@ -213,32 +213,30 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
   };
 
   useEffect(() => {
-    // 定义需要定期执行的函数
-    const myFunction = () => {
-      const randomNumbers = Array.from({ length: tokenList.length - 1 }, () => Math.random() * 100);
-      randomNumbers.sort((a, b) => a - b);
-      randomNumbers.unshift(0);
-      randomNumbers.push(100);
-      const portion_result = [];
-      for (let i = 1; i < randomNumbers.length; i++) {
-        portion_result.push(parseFloat((randomNumbers[i] - randomNumbers[i - 1]).toFixed(2)));
+    // Define the function to fetch and process data
+    const fetchTradeData = async () => {
+      try {
+        const response = await fetch('/result.jsonl.pretty.json');
+        const tradeData = await response.json();
+        // Extract position percentages and leverage values from actions
+        const portion_result = tradeData.actions.map((action: { position_percentage: number }) => action.position_percentage);
+        const leverageValues = tradeData.actions.map((action: { leverage: number }) => action.leverage);
+        
+        // Set the state with actual data
+        setTransferAmount(portion_result);
+        setLever(leverageValues);
+        // Determine long/short based on leverage sign (positive = long, negative = short)
+        setLong(leverageValues.map((leverage: number) => leverage > 0));
+      } catch (error) {
+        console.error('Error fetching trade data:', error);
+        // Fallback to random values if fetch fails
+        // ... existing random generation code ...
       }
-      const randomIntegers: number[] = [];
-      for (let i = 0; i < tokenList.length; i++) {
-        const randomInt = Math.floor(Math.random() * (120 - 30 + 1)) + 30;
-        randomIntegers.push(randomInt);
-      }
-      console.log(portion_result);
-      setTransferAmount(portion_result);
-      setLever(randomIntegers);
-      setLong(Array.from({ length: tokenList.length }, () => Math.random() < 0.5));
     };
-    
-    const intervalId = setInterval(myFunction, 30000);
-    myFunction(); // 立即执行一次
 
-    return () => clearInterval(intervalId);
-  }, []); // 空数组作为依赖，确保只在组件挂载和卸载时执行
+    // Call the function
+    fetchTradeData();
+  }, []); // Empty dependency array means this runs once on component mount
 
   return (
     <div className="mt-4 mr-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] border-2 border-white/50">

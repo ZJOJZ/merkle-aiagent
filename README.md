@@ -38,11 +38,11 @@ npm run dev
 ## Run Backend (Portfolio Generator)    
 ```bash
 # install dependencies
-pip install -r portfolio_generator/requirements.txt
+pip install -r data-process/requirements.txt
 # for test
-python -m portfolio_generator.test_api
+python data-process/test_api.py
 # for running
-python -m portfolio_generator.main
+python data-process/main.py
 
 ```
 
