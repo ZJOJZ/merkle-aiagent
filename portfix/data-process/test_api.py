@@ -6,7 +6,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 import logging
 import sys
-from .MarketAnalyzer import get_market_indicators
+from MarketAnalyzer import get_market_indicators
 
 # Configure logging
 logging.basicConfig(
@@ -14,13 +14,13 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("portfolio_generator/output/test_api.log", mode="w"),
+        logging.FileHandler("./output/test_api.log", mode="w"),
     ],
 )
 logger = logging.getLogger("test_api")
 
 # Import the TradingAgent and sample market data function
-from portfolio_generator.generator import TradingAgent, get_sample_market_data
+from generator import TradingAgent, get_sample_market_data
 
 
 def load_env_variables():
@@ -29,10 +29,6 @@ def load_env_variables():
     if os.path.exists(".env"):
         load_dotenv()
         logger.info("Loaded environment variables from .env in current directory")
-    # Then try the portfolio_generator directory
-    elif os.path.exists("portfolio_generator/.env"):
-        load_dotenv("portfolio_generator/.env")
-        logger.info("Loaded environment variables from portfolio_generator/.env")
     else:
         logger.warning(
             "No .env file found. Make sure to set DEEPSEEK_API_KEY environment variable."
@@ -79,10 +75,10 @@ def test_trading_actions_generation():
         return False
 
     # Create output directory if it doesn't exist
-    os.makedirs("portfolio_generator/output", exist_ok=True)
+    os.makedirs("./output", exist_ok=True)
 
     # Initialize the trading agent
-    output_file = "portfolio_generator/output/test_api_results.jsonl"
+    output_file = "./output/test_api_results.jsonl"
     logger.info(f"Initializing TradingAgent with output file: {output_file}")
 
     try:
