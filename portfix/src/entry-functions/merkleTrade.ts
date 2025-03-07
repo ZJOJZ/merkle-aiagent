@@ -33,7 +33,7 @@ export async function OpenPosition(token: string, amount: bigint, side: boolean,
     //     sender: address,
     //     data: Payload,
     //   });
-      
+    console.log(Payload.function);
     return {
         data: {
             function: Payload.function,

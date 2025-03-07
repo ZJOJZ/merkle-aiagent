@@ -7,6 +7,7 @@ import { MerkleClient, MerkleClientConfig} from "@merkletrade/ts-sdk";
 import { OpenPosition } from "@/entry-functions/merkleTrade";
 import { aptosClient } from "@/utils/aptosClient";
 import { useQueryClient } from "@tanstack/react-query";
+import { Aptos } from "@aptos-labs/ts-sdk";
 
 import { useEffect, useState } from "react";
 
@@ -217,43 +218,68 @@ export const Trade = () => {
         }
     
         try {
-          const n1 = BigInt(Math.floor(amount1) * totalinput) * 10_000n;
-          if(n1 > 10_000_000n){
-          const transaction = await OpenPosition("BTC_USD", n1, islong1, lever1, account.address, merkle);
-          const committedTransaction = await signAndSubmitTransaction(transaction);
-          const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+            let txs = [];
+            const n1 = BigInt(Math.floor(amount1) * totalinput) * 10_000n;
+            if(n1 > 10_000_000n){
+                const transaction = await OpenPosition("BTC_USD", n1, islong1, lever1, account.address, merkle);
+                txs.push(transaction)
+                //const committedTransaction = await signAndSubmitTransaction(transaction);
+                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
             }
           
             const n2 = BigInt(Math.floor(amount2) * totalinput) * 10_000n;
-          if(n2 > 10_000_000n){
-          const transaction = await OpenPosition("ETH_USD", n2, islong2, lever2, account.address, merkle);
-          const committedTransaction = await signAndSubmitTransaction(transaction);
-          const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+            if(n2 > 10_000_000n){
+                const transaction = await OpenPosition("ETH_USD", n2, islong2, lever2, account.address, merkle);
+                txs.push(transaction)
+                //const committedTransaction = await signAndSubmitTransaction(transaction);
+                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
             }
             const n3 = BigInt(Math.floor(amount3) * totalinput) * 10_000n;
-          if(n3 > 10_000_000n){
-          const transaction = await OpenPosition("APT_USD", n3, islong3, lever3, account.address, merkle);
-          const committedTransaction = await signAndSubmitTransaction(transaction);
-          const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+            if(n3 > 10_000_000n){
+                const transaction = await OpenPosition("APT_USD", n3, islong3, lever3, account.address, merkle);
+                txs.push(transaction)
+                //const committedTransaction = await signAndSubmitTransaction(transaction);
+                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
             }
             const n4 = BigInt(Math.floor(amount4) * totalinput) * 10_000n;
             if(n4 > 10_000_000n){
                 const transaction = await OpenPosition("SUI_USD", n4, islong4, lever4, account.address, merkle);
-                const committedTransaction = await signAndSubmitTransaction(transaction);
-                const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+                txs.push(transaction)
+                //const committedTransaction = await signAndSubmitTransaction(transaction);
+                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
             }
             const n5 = BigInt(Math.floor(amount5) * totalinput) * 10_000n;
             if(n5 > 10_000_000n){
                 const transaction = await OpenPosition("TRUMP_USD", n5, islong5, lever5, account.address, merkle);
-                const committedTransaction = await signAndSubmitTransaction(transaction);
-                const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+                txs.push(transaction)
+                //const committedTransaction = await signAndSubmitTransaction(transaction);
+                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
             }
             const n6 = BigInt(Math.floor(amount6) * totalinput) * 10_000n;
             if(n6 > 10_000_000n){
                 const transaction = await OpenPosition("DOGE_USD", n6, islong6, lever6, account.address, merkle);
-                const committedTransaction = await signAndSubmitTransaction(transaction);
-                const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+                txs.push(transaction)
+                //const committedTransaction = await signAndSubmitTransaction(transaction);
+                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
             }
+            const payloads = txs.map(txn => ({
+                type:'entry_function_payload',
+                function: txn.data.function,
+                type_arguments: txn.data.typeArguments,
+                arguments: txn.data.functionArguments,
+              }));
+            //const signedTransactions = await Promise.all(payloads.map(payload => signTransaction(payload)));
+            //const responses = await Promise.all(signedTransactions.map((txn, index) => 
+            //            submitTransaction({transaction : payloads[index], senderAuthenticator: txn})));
+            const committedTransaction = await Promise.all(
+                txs.map((txn) => signAndSubmitTransaction(txn))
+            );
+            await Promise.all(
+                committedTransaction.map((response) =>
+                  aptosClient().waitForTransaction({ transactionHash: response.hash })
+                )
+              );
+          
             queryClient.invalidateQueries({
             queryKey: ["apt-balance", account?.address],
           });
