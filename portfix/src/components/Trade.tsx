@@ -7,7 +7,8 @@ import { MerkleClient, MerkleClientConfig} from "@merkletrade/ts-sdk";
 import { OpenPosition } from "@/entry-functions/merkleTrade";
 import { aptosClient } from "@/utils/aptosClient";
 import { useQueryClient } from "@tanstack/react-query";
-import { Aptos } from "@aptos-labs/ts-sdk";
+import { Aptos, AccountAddressInput } from "@aptos-labs/ts-sdk";
+import { bcs } from "@mysten/bcs";
 
 import { useEffect, useState } from "react";
 
@@ -220,20 +221,35 @@ export const Trade = () => {
         try {
             let txs = [];
             const n1 = BigInt(Math.floor(amount1) * totalinput) * 10_000n;
+            let params :  (bigint | boolean | AccountAddressInput)[] = [];
             if(n1 > 10_000_000n){
                 const transaction = await OpenPosition("BTC_USD", n1, islong1, lever1, account.address, merkle);
                 txs.push(transaction)
-                //const committedTransaction = await signAndSubmitTransaction(transaction);
-                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+                params = params.concat(transaction.data.functionArguments);
+                const committedTransaction = await signAndSubmitTransaction(transaction);
+                const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
             }
           
             const n2 = BigInt(Math.floor(amount2) * totalinput) * 10_000n;
             if(n2 > 10_000_000n){
                 const transaction = await OpenPosition("ETH_USD", n2, islong2, lever2, account.address, merkle);
+                params = params.concat(transaction.data.functionArguments);
                 txs.push(transaction)
                 //const committedTransaction = await signAndSubmitTransaction(transaction);
                 //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
             }
+
+            // const committedTransaction = await signAndSubmitTransaction(
+            //     {data:{
+            //         function: `0x827b56914a808d9f638252cd9b3c1229a2c2bc606eb4f70f53c741350f1dea0e::BatchCaller::batch_execute_merkle`,
+            //         functionArguments: [1, params],
+            //         typeArguments: []
+            //     }}
+            // );
+            // const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+
+            //console.log(params)
+            
             const n3 = BigInt(Math.floor(amount3) * totalinput) * 10_000n;
             if(n3 > 10_000_000n){
                 const transaction = await OpenPosition("APT_USD", n3, islong3, lever3, account.address, merkle);
@@ -268,17 +284,7 @@ export const Trade = () => {
                 type_arguments: txn.data.typeArguments,
                 arguments: txn.data.functionArguments,
               }));
-            //const signedTransactions = await Promise.all(payloads.map(payload => signTransaction(payload)));
-            //const responses = await Promise.all(signedTransactions.map((txn, index) => 
-            //            submitTransaction({transaction : payloads[index], senderAuthenticator: txn})));
-            const committedTransaction = await Promise.all(
-                txs.map((txn) => signAndSubmitTransaction(txn))
-            );
-            await Promise.all(
-                committedTransaction.map((response) =>
-                  aptosClient().waitForTransaction({ transactionHash: response.hash })
-                )
-              );
+
           
             queryClient.invalidateQueries({
             queryKey: ["apt-balance", account?.address],

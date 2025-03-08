@@ -1,0 +1,77 @@
+---
+compiled_package_info:
+  package_name: batch_process
+  address_alias_instantiation:
+    Extensions: "0000000000000000000000000000000000000000000000000000000000000001"
+    aptos_address: 827b56914a808d9f638252cd9b3c1229a2c2bc606eb4f70f53c741350f1dea0e
+    aptos_framework: "0000000000000000000000000000000000000000000000000000000000000001"
+    aptos_fungible_asset: 000000000000000000000000000000000000000000000000000000000000000a
+    aptos_std: "0000000000000000000000000000000000000000000000000000000000000001"
+    aptos_token: "0000000000000000000000000000000000000000000000000000000000000003"
+    aptos_token_objects: "0000000000000000000000000000000000000000000000000000000000000004"
+    circle: 72d1e6aa6a648a3afc5d45d8d66b353f1e1837a728c0813beec77f28a697fa7a
+    core_resources: 000000000000000000000000000000000000000000000000000000000a550c18
+    deployer: b31e712b26fd295357355f6845e77c888298636609e93bc9b05f0f604049f434
+    merkle: 33a8693758d1d28a9305946c7758b7548a04736c35929eac22eb0de2a865275d
+    merkle_address: 33a8693758d1d28a9305946c7758b7548a04736c35929eac22eb0de2a865275d
+    merkle_redemption_tools: cf93155bab72399a4f9e9b673621e22ca300f54ebea2a98febc55d17f04aac57
+    pyth: 7e783b349d3e89cf5931af376ebeadbfab855b3fa239b7ada8f5a92fbea6b387
+    redemption: 834d9657e774f8ef2a6b4a5352937f34baa85a3c50a5ff93808fdc3723e4a202
+    std: "0000000000000000000000000000000000000000000000000000000000000001"
+    vm: "0000000000000000000000000000000000000000000000000000000000000000"
+    vm_reserved: "0000000000000000000000000000000000000000000000000000000000000000"
+    wormhole: 5bc11445584a763c1fa7ed39081f1b920954da14e04b32440cba863d03e19625
+  source_digest: 2CB923358B04EC1A7816680D6DCA814B0E1A9BC53B7A8098A20EE0F08C6A04A3
+  build_flags:
+    dev_mode: false
+    test_mode: false
+    override_std: ~
+    generate_docs: false
+    generate_abis: false
+    generate_move_model: true
+    full_model_generation: false
+    install_dir: ~
+    force_recompilation: false
+    additional_named_addresses: {}
+    architecture: ~
+    fetch_deps_only: false
+    skip_fetch_latest_git_deps: false
+    compiler_config:
+      bytecode_version: 7
+      known_attributes:
+        - bytecode_instruction
+        - deprecated
+        - event
+        - expected_failure
+        - "fmt::skip"
+        - legacy_entry_fun
+        - "lint::allow_unsafe_randomness"
+        - "lint::skip"
+        - "mutation::skip"
+        - native_interface
+        - randomness
+        - resource_group
+        - resource_group_member
+        - test
+        - test_only
+        - verify_only
+        - view
+      skip_attribute_checks: false
+      compiler_version: V2_0
+      language_version: V2_1
+      experiments:
+        - optimize=on
+dependencies:
+  - AptosFramework
+  - AptosStdlib
+  - AptosToken
+  - AptosTokenObjects
+  - Deployer
+  - MoveStdlib
+  - Pyth
+  - Wormhole
+  - merkle
+  - merkle-common
+  - merkle-redemption-tools
+  - redemption
+bytecode_deps: []

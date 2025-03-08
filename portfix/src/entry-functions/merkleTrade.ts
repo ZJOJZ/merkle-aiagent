@@ -28,15 +28,18 @@ export async function OpenPosition(token: string, amount: bigint, side: boolean,
         isLong: side,
         isIncrease: true,
     });
+
     //const aptos = new Aptos(merkle.config.aptosConfig);
     // const transaction = await aptos.transaction.build.simple({
     //     sender: address,
     //     data: Payload,
     //   });
-    console.log(Payload.function);
+    //console.log(Payload.function);
+    
+    //console.log(Payload.functionArguments);
     return {
         data: {
-            function: Payload.function,
+            function: `0x827b56914a808d9f638252cd9b3c1229a2c2bc606eb4f70f53c741350f1dea0e::BatchCaller::batch_execute_merkle_v1`,
             functionArguments: Payload.functionArguments,
             typeArguments: Payload.typeArguments
         }

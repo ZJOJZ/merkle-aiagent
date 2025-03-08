@@ -1,0 +1,24 @@
+[package]
+name = 'merkle-token'
+version = '1.0.0'
+
+#[addresses]
+#std = "0x1"
+#aptos_std = "0x1"
+#aptos_framework = "0x1"
+#merkle = "0x5ae6789dd2fec1a9ec9cccfb3acaf12e93d432f0a3a42c92fe1a9d490b7bbc06"
+
+[addresses]
+std = "0x1"
+aptos_std = "0x1"
+aptos_framework = "0x1"
+merkle = "0x33a8693758d1d28a9305946c7758b7548a04736c35929eac22eb0de2a865275d"
+
+[dependencies]
+AptosFramework = { git = 'https://github.com/aptos-labs/aptos-core.git', subdir = 'aptos-move/framework/aptos-framework', rev = '7fc73792e9db11462c9a42038c4a9eb41cc00192' }
+AptosToken = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-token/", rev = "7fc73792e9db11462c9a42038c4a9eb41cc00192" }
+AptosTokenObjects = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-token-objects/", rev = "7fc73792e9db11462c9a42038c4a9eb41cc00192" }
+AptosStdlib = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-stdlib/", rev = "7fc73792e9db11462c9a42038c4a9eb41cc00192" }
+#Liquidswapv05 = { git = "https://github.com/tauruslabs/liquidswap_v05.git", subdir = "", rev = "v05-main" }
+Liquidswapv05 = { git = "https://github.com/tauruslabs/liquidswap_v05.git", subdir = "", rev = "testnet" }
+merkle-common = { local = "../merkle-common" }
