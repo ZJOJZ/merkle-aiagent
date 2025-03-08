@@ -1,78 +1,49 @@
 "use client"
 
 import React, { useEffect, useState } from "react"; // Import React to define JSX types
-import { Aptos, AptosConfig, Ed25519PrivateKey, Network, PrivateKey, PrivateKeyVariants } from "@aptos-labs/ts-sdk"
-import { AgentRuntime, LocalSigner, createAptosTools } from "move-agent-kit";
 import { Card, CardContent } from "@/components/ui/card"; // Importing shadcn UI card components
+import { aptosAgent, signer } from "@/components/Main";
 
-export function MoveAIAgent() {
+
+interface AgentUIProps {
+    isaptosAgentReady: boolean;
+}
+
+export function MoveAIAgent({ isaptosAgentReady }: AgentUIProps) {
     const [result, setResult] = useState(null);
-    const [balance, setBalance] = useState(null);
+    const [balance, setBalance] = useState(Number);
     const [txInfo, setTxInfo] = useState(null);
-    const [userPositions, setUserPositions] = useState(null);
+    const [userPositions, setUserPositions] = useState();
 
     useEffect(() => {
+        if(!isaptosAgentReady) return
         async function fetchData() {
             try {
-                // Initialize Aptos configuration
-                const aptosConfig = new AptosConfig({
-                    network: Network.TESTNET,
-                });
-
-                const aptos = new Aptos(aptosConfig);
-
-                // Validate and get private key from environment
-                const privateKeyStr = process.env.APTOS_PRIVATE_KEY;
-                if (!privateKeyStr) {
-                    throw new Error("Missing APTOS_PRIVATE_KEY environment variable");
-                }
-
-                // Setup account and signer
-                const account = await aptos.deriveAccountFromPrivateKey({
-                    privateKey: new Ed25519PrivateKey(PrivateKey.formatPrivateKey(privateKeyStr, PrivateKeyVariants.Ed25519)),
-                });
-
-                const signer = new LocalSigner(account, Network.TESTNET);
-
-                const aptosMerkleAgent = new AgentRuntime(signer, aptos, {
-                    OPENAI_API_KEY: process.env.OPENAI_API_KEY // optional
-                });
-                
-
-                const tools = createAptosTools(aptosMerkleAgent);
-
-                const userPositions = await aptosMerkleAgent.getUserAllPositions(account);
-                setUserPositions(userPositions);
-
-                // Token Transfer
-                const transferResult = await aptosMerkleAgent.transferTokens("to_address", 1.0);
-                setResult(transferResult);
+                // const userPositions = await aptosAgent.getUserAllPositions(signer.getAddress());
+                // console.log(userPositions)
+                // setUserPositions(userPositions);
 
                 // Get Balance
-                const accountBalance = await aptosMerkleAgent.getBalance("0x123...");
+                const accountBalance = await aptosAgent.getBalance();
                 setBalance(accountBalance);
-
-                // Get transaction details
-                const transactionInfo = await aptosMerkleAgent.transferTokens("0x789...");
-                setTxInfo(transactionInfo);
-
             } catch (error) {
                 console.error(error);
             }
         }
-
         fetchData();
-    }, []);
+        const intervalId = setInterval(fetchData, 5000);
+        return () => clearInterval(intervalId);
+    }, [isaptosAgentReady]);
 
     // Corrected return statement using shadcn UI card
     return (
         <Card>
             <CardContent>
-                <div>Transfer Result: {JSON.stringify(result)}</div>
-                <div>{account}</div>
-                <div>User Position: {JSON.stringify(userPositions)}</div>
+                {/* <div>Transfer Result: {JSON.stringify(result)}</div> */}
+                {/* <div>{account}</div> */}
+                {/* <div>User Position: {JSON.stringify(userPositions)}</div> */}
                 <div>Balance: {balance}</div>
-                <div>Transaction Info: {JSON.stringify(txInfo)}</div>
+                {/* <div>Transaction Info: {JSON.stringify(txInfo)}</div> */}
             </CardContent>
         </Card>
     );
