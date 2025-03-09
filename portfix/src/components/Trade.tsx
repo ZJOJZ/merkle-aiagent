@@ -198,6 +198,7 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
       for (let i = 0; i < tokenList.length; i++) {
         const n = BigInt(Math.floor(amount[i] * totalinput)) * 10_000n;
         if (n > 10_000_000n) {
+          console.log("111",i,`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
           const transaction = await OpenPosition(`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
           const committedTransaction = await signAndSubmitTransaction(transaction);
           await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash});
@@ -224,7 +225,7 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
         
         // Set the state with actual data
         setTransferAmount(portion_result);
-        setLever(leverageValues);
+        setLever(leverageValues.map((leverage: number) => Math.abs(leverage)));
         // Determine long/short based on leverage sign (positive = long, negative = short)
         setLong(leverageValues.map((leverage: number) => leverage > 0));
       } catch (error) {
