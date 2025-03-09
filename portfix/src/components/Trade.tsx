@@ -235,8 +235,14 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
       }
     };
 
-    // Call the function
+    // Initial fetch
     fetchTradeData();
+
+    // Set up polling interval (e.g., every 10 seconds)
+    const intervalId = setInterval(fetchTradeData, 10000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
   }, []); // Empty dependency array means this runs once on component mount
 
   return (
