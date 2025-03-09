@@ -6,7 +6,7 @@ import { Portfolio } from "@/components/Portfolio";
 import { TradeUI } from "@/components/Trade";
 import { MerkleTokenPair } from "@/components/MerklePair";
 
-import { AgentRuntime, LocalSigner, createAptosTools, WalletSigner} from "move-agent-kit";
+import { AgentRuntime, WalletSigner} from "../../move-agent-kit/src";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { Aptos, AptosConfig, Network, Account} from "@aptos-labs/ts-sdk"
 import { MoveAIAgent } from "@/components/MoveAIAgent";
