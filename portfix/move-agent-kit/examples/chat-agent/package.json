@@ -1,0 +1,33 @@
+{
+	"name": "chat-agent",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@aptos-labs/ts-sdk": "^1.33.1",
+		"@langchain/anthropic": "^0.3.12",
+		"@langchain/core": "^0.3.32",
+		"@langchain/langgraph": "^0.2.41",
+		"ai": "^3.4.33",
+		"isomorphic-dompurify": "^2.20.0",
+		"marked": "^15.0.6",
+		"move-agent-kit": "^0.1.2",
+		"next": "15.1.4",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"react-toastify": "^11.0.3"
+	},
+	"devDependencies": {
+		"@types/node": "^20.17.14",
+		"@types/react": "^19.0.7",
+		"@types/react-dom": "^19.0.3",
+		"postcss": "^8.5.1",
+		"tailwindcss": "^3.4.17",
+		"typescript": "^5.7.3"
+	}
+}
