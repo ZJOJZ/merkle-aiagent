@@ -27,13 +27,13 @@ export async function lendToken(
 	const DEFAULT_FUNCTIONAL_ARGS = [positionId, amount, newPosition]
 
 	const COIN_STANDARD_DATA: InputGenerateTransactionPayloadData = {
-		function: "0xddb87c0d0ce27cf4a205c2f5e65d6897936d468df8d1611c50b4eb72ed4c9468::pool::lend",
+		function: "0x2fe576faa841347a9b1b32c869685deb75a15e3f62dfe37cbd6d52cc403a16f6::pool::lend",
 		typeArguments: [mint.toString()],
 		functionArguments: DEFAULT_FUNCTIONAL_ARGS,
 	}
 
 	const FUNGIBLE_ASSET_DATA: InputGenerateTransactionPayloadData = {
-		function: "0xddb87c0d0ce27cf4a205c2f5e65d6897936d468df8d1611c50b4eb72ed4c9468::pool::lend_fa",
+		function: "0x2fe576faa841347a9b1b32c869685deb75a15e3f62dfe37cbd6d52cc403a16f6::pool::lend_fa",
 		functionArguments: [positionId, mint.toString(), newPosition, amount],
 	}
 

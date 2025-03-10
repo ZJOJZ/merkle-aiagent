@@ -31,7 +31,7 @@ export function Dashboard() {
 
     useEffect(() => {
         const initMerkle = async () => {
-            merkle = new MerkleClient(await MerkleClientConfig.testnet());
+            merkle = new MerkleClient(await MerkleClientConfig.mainnet());
             setIsClientReady(true);
         };
         

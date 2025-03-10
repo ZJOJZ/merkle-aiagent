@@ -32,15 +32,15 @@ export function Platform() {
   // 初始化Merkle客户端
   useEffect(() => {
     const initMerkle = async () => {
-      merkle = new MerkleClient(await MerkleClientConfig.testnet());
+      merkle = new MerkleClient(await MerkleClientConfig.mainnet());
       setIsClientReady(true);
     };
     const initAptosAgent = async() => {
       const aptosConfig = new AptosConfig({
-        network: Network.TESTNET,
+        network: Network.MAINNET,
       });
       aptos = new Aptos(aptosConfig);
-      signer = new WalletSigner(account, walletstate, Network.TESTNET); //use walletsigner
+      signer = new WalletSigner(account, walletstate, Network.MAINNET); //use walletsigner
       aptosAgent = new AgentRuntime(signer, aptos);
       setIsaptosAgentReady(true);
     };

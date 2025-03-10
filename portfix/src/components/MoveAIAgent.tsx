@@ -19,10 +19,10 @@ export function MoveAIAgent({ isaptosAgentReady }: AgentUIProps) {
     const [userPositions, setUserPositions] = useState();
     //const Agenttools = createAptosTools(aptosAgent);
     const [totalborrow, settotalborrow] = useState<number>(0);
-    const TESTUSDT = "0xddb87c0d0ce27cf4a205c2f5e65d6897936d468df8d1611c50b4eb72ed4c9468::test_tokens::USDT"
-    const TESTAPT = "0xddb87c0d0ce27cf4a205c2f5e65d6897936d468df8d1611c50b4eb72ed4c9468::test_tokens::APT"
-    const TESTUSDC = "0xddb87c0d0ce27cf4a205c2f5e65d6897936d468df8d1611c50b4eb72ed4c9468::test_tokens::USDC"
-    const TESTWETH = "0xddb87c0d0ce27cf4a205c2f5e65d6897936d468df8d1611c50b4eb72ed4c9468::test_tokens::WETH"
+    const TESTUSDT = "0x2fe576faa841347a9b1b32c869685deb75a15e3f62dfe37cbd6d52cc403a16f6::test_tokens::USDT"
+    const TESTAPT = "0x2fe576faa841347a9b1b32c869685deb75a15e3f62dfe37cbd6d52cc403a16f6::test_tokens::APT"
+    const TESTUSDC = "0x2fe576faa841347a9b1b32c869685deb75a15e3f62dfe37cbd6d52cc403a16f6::test_tokens::USDC"
+    const TESTWETH = "0x2fe576faa841347a9b1b32c869685deb75a15e3f62dfe37cbd6d52cc403a16f6::test_tokens::WETH"
     
     useEffect(() => {
         if(!isaptosAgentReady) return

@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { getAccountAPTBalance } from "@/view-functions/getAccountBalance";
 import { OpenPosition } from "@/entry-functions/merkleTrade";
 
-const merkle = new MerkleClient(await MerkleClientConfig.testnet());
+const merkle = new MerkleClient(await MerkleClientConfig.mainnet());
 
 export function MerkleTrade() {
   const { account, signAndSubmitTransaction } = useWallet();
