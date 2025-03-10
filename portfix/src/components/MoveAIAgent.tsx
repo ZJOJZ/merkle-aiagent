@@ -20,6 +20,10 @@ export function MoveAIAgent({ isaptosAgentReady }: AgentUIProps) {
     //const Agenttools = createAptosTools(aptosAgent);
     const [totalborrow, settotalborrow] = useState<number>(0);
     const TESTUSDT = "0xddb87c0d0ce27cf4a205c2f5e65d6897936d468df8d1611c50b4eb72ed4c9468::test_tokens::USDT"
+    const TESTAPT = "0xddb87c0d0ce27cf4a205c2f5e65d6897936d468df8d1611c50b4eb72ed4c9468::test_tokens::APT"
+    const TESTUSDC = "0xddb87c0d0ce27cf4a205c2f5e65d6897936d468df8d1611c50b4eb72ed4c9468::test_tokens::USDC"
+    const TESTWETH = "0xddb87c0d0ce27cf4a205c2f5e65d6897936d468df8d1611c50b4eb72ed4c9468::test_tokens::WETH"
+    
     useEffect(() => {
         if(!isaptosAgentReady) return
         async function fetchData() {
@@ -43,17 +47,16 @@ export function MoveAIAgent({ isaptosAgentReady }: AgentUIProps) {
         return () => clearInterval(intervalId);
     }, [isaptosAgentReady]);
 
-    const onClickButton = async () => {
+    const onClickButton1 = async () => {
         if (!isaptosAgentReady) {
           return;
         }
     
         try {
-            console.log(totalborrow)
-            //console.log(signer.getAddress().toString())
-            //await aptosAgent.borrowToken(totalborrow, APTOS_COIN, "1", false)
-            await aptosAgent.lendToken(totalborrow, TESTUSDT, "1", true, false)
-            
+            await aptosAgent.borrowToken(totalborrow, TESTUSDT, "1", false)
+            //await aptosAgent.lendToken(totalborrow, TESTAPT, "2", true, false)
+            //await aptosAgent.withdrawToken(totalborrow, TESTUSDT, "1", false)
+            //await aptosAgent.repayToken(totalborrow, TESTUSDT, "1", false)
         } catch (error) {
           console.error(error);
         }
@@ -76,7 +79,7 @@ export function MoveAIAgent({ isaptosAgentReady }: AgentUIProps) {
               className="w-32 bg-black/20"
             />
           </div>
-            <Button onClick={onClickButton} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={onClickButton1} className="bg-blue-600 hover:bg-blue-700">
                 Execute
             </Button>
 
