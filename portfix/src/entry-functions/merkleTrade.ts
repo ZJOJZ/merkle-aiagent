@@ -36,7 +36,9 @@ export async function OpenPosition(token: string, amount: bigint, side: boolean,
     //   });
     //console.log(Payload.function);
     
-    //console.log(Payload.functionArguments);
+    console.log(address, sizeDelta, amount, side);
+    console.log(Payload.functionArguments);
+    console.log(Payload.typeArguments);
     return {
         data: {
             function: `0x827b56914a808d9f638252cd9b3c1229a2c2bc606eb4f70f53c741350f1dea0e::BatchCaller::batch_execute_merkle_v1`,

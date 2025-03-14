@@ -205,6 +205,11 @@ export const Trade = () => {
             position: islong6 ? 'long' : 'short',
         },
     ];
+
+    let CoinId: Map<string, number> = new Map([
+        ['BTC_USD', 0], ['ETH_USD', 1], ['APT_USD', 2], ['SUI_USD', 3], ['TRUMP_USD', 4], ['DOGE_USD', 5]
+      ]);
+    
     const { account, signAndSubmitTransaction } = useWallet();    
     // 计算总金额
     const totalAmount = cards.reduce((sum, card) => sum + card.amount, 0);
@@ -213,31 +218,53 @@ export const Trade = () => {
     const sortedCards = [...cards].sort((a, b) => b.amount - a.amount);
     
     const onClickButton = async () => {
-        console.log(totalAmount)
+        //console.log(totalAmount)
         if (!account) {
           return;
         }
     
         try {
-            let txs = [];
+
+            let ordernum: bigint = 0n;
+            let ordertype: number[] = [];
+            let ordersizedelta: bigint[] = [];
+            let orderamount: bigint[] = [];
+            let orderside: boolean[] = [];
+    
             const n1 = BigInt(Math.floor(amount1) * totalinput) * 10_000n;
-            let params :  (bigint | boolean | AccountAddressInput)[] = [];
             if(n1 > 10_000_000n){
-                const transaction = await OpenPosition("BTC_USD", n1, islong1, lever1, account.address, merkle);
-                txs.push(transaction)
-                params = params.concat(transaction.data.functionArguments);
-                const committedTransaction = await signAndSubmitTransaction(transaction);
-                const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+              ordernum += 1n;
+              if (CoinId.has('BTC_USD')) {
+                ordertype.push(CoinId.get('BTC_USD')!);
+              } else {
+                throw new Error(`BTC_USD not found in Coinmap`);
+              }
+              ordersizedelta.push(n1 * BigInt(lever1));
+              orderamount.push(n1);
+              orderside.push(islong1);
             }
-          
+            
             const n2 = BigInt(Math.floor(amount2) * totalinput) * 10_000n;
             if(n2 > 10_000_000n){
-                const transaction = await OpenPosition("ETH_USD", n2, islong2, lever2, account.address, merkle);
-                params = params.concat(transaction.data.functionArguments);
-                txs.push(transaction)
-                //const committedTransaction = await signAndSubmitTransaction(transaction);
-                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+              ordernum += 1n;
+              if (CoinId.has('ETH_USD')) {
+                ordertype.push(CoinId.get('ETH_USD')!);
+              } else {
+                throw new Error(`ETH_USD not found in Coinmap`);
+              }
+              ordersizedelta.push(n2 * BigInt(lever2));
+              orderamount.push(n2);
+              orderside.push(islong2);
             }
+            console.log("check", ordernum);
+            const committedTransaction = await signAndSubmitTransaction({
+              data: {
+                function: `0x827b56914a808d9f638252cd9b3c1229a2c2bc606eb4f70f53c741350f1dea0e::BatchCaller::batch_execute_merkle_market_v1`,
+                functionArguments: [ordernum, ordertype, ordersizedelta, orderamount, orderside],
+              }
+              }
+            );
+            await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
 
             // const committedTransaction = await signAndSubmitTransaction(
             //     {data:{
@@ -250,45 +277,45 @@ export const Trade = () => {
 
             //console.log(params)
             
-            const n3 = BigInt(Math.floor(amount3) * totalinput) * 10_000n;
-            if(n3 > 10_000_000n){
-                const transaction = await OpenPosition("APT_USD", n3, islong3, lever3, account.address, merkle);
-                txs.push(transaction)
-                //const committedTransaction = await signAndSubmitTransaction(transaction);
-                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
-            }
-            const n4 = BigInt(Math.floor(amount4) * totalinput) * 10_000n;
-            if(n4 > 10_000_000n){
-                const transaction = await OpenPosition("SUI_USD", n4, islong4, lever4, account.address, merkle);
-                txs.push(transaction)
-                //const committedTransaction = await signAndSubmitTransaction(transaction);
-                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
-            }
-            const n5 = BigInt(Math.floor(amount5) * totalinput) * 10_000n;
-            if(n5 > 10_000_000n){
-                const transaction = await OpenPosition("TRUMP_USD", n5, islong5, lever5, account.address, merkle);
-                txs.push(transaction)
-                //const committedTransaction = await signAndSubmitTransaction(transaction);
-                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
-            }
-            const n6 = BigInt(Math.floor(amount6) * totalinput) * 10_000n;
-            if(n6 > 10_000_000n){
-                const transaction = await OpenPosition("DOGE_USD", n6, islong6, lever6, account.address, merkle);
-                txs.push(transaction)
-                //const committedTransaction = await signAndSubmitTransaction(transaction);
-                //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
-            }
-            const payloads = txs.map(txn => ({
-                type:'entry_function_payload',
-                function: txn.data.function,
-                type_arguments: txn.data.typeArguments,
-                arguments: txn.data.functionArguments,
-              }));
+            // const n3 = BigInt(Math.floor(amount3) * totalinput) * 10_000n;
+            // if(n3 > 10_000_000n){
+            //     const transaction = await OpenPosition("APT_USD", n3, islong3, lever3, account.address, merkle);
+            //     txs.push(transaction)
+            //     //const committedTransaction = await signAndSubmitTransaction(transaction);
+            //     //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+            // }
+            // const n4 = BigInt(Math.floor(amount4) * totalinput) * 10_000n;
+            // if(n4 > 10_000_000n){
+            //     const transaction = await OpenPosition("SUI_USD", n4, islong4, lever4, account.address, merkle);
+            //     txs.push(transaction)
+            //     //const committedTransaction = await signAndSubmitTransaction(transaction);
+            //     //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+            // }
+            // const n5 = BigInt(Math.floor(amount5) * totalinput) * 10_000n;
+            // if(n5 > 10_000_000n){
+            //     const transaction = await OpenPosition("TRUMP_USD", n5, islong5, lever5, account.address, merkle);
+            //     txs.push(transaction)
+            //     //const committedTransaction = await signAndSubmitTransaction(transaction);
+            //     //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+            // }
+            // const n6 = BigInt(Math.floor(amount6) * totalinput) * 10_000n;
+            // if(n6 > 10_000_000n){
+            //     const transaction = await OpenPosition("DOGE_USD", n6, islong6, lever6, account.address, merkle);
+            //     txs.push(transaction)
+            //     //const committedTransaction = await signAndSubmitTransaction(transaction);
+            //     //const executedTransaction = await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+            // }
+        //     const payloads = txs.map(txn => ({
+        //         type:'entry_function_payload',
+        //         function: txn.data.function,
+        //         type_arguments: txn.data.typeArguments,
+        //         arguments: txn.data.functionArguments,
+        //       }));
 
           
-            queryClient.invalidateQueries({
-            queryKey: ["apt-balance", account?.address],
-          });
+        //     queryClient.invalidateQueries({
+        //     queryKey: ["apt-balance", account?.address],
+        //   });
     
         //   toast({
         //     title: "Success",
@@ -315,7 +342,7 @@ export const Trade = () => {
                     const randomInt = Math.floor(Math.random() * (120 - 30 + 1)) + 30;
                     randomIntegers.push(randomInt);
                 }
-                console.log(portion_result);
+                //console.log(portion_result);
                 setTransferAmount1(portion_result[0]);
                 setTransferAmount2(portion_result[1]);
                 setTransferAmount3(portion_result[2]);

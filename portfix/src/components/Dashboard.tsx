@@ -34,9 +34,9 @@ export function Dashboard() {
 
     const updateAsset = async (token: string) => {
         const [size, price] = await getTokenPosition(token, account.address, merkle)
-        console.log(size,price);
+        //console.log(size,price);
         const newprice = Number(price) / Number(10000000000);
-        console.log(newprice, token);
+        //console.log(newprice, token);
         setAssets(prevAssets =>
           prevAssets.map(asset =>
             asset.token === token

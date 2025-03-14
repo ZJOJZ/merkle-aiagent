@@ -1,9 +1,15 @@
 module aptos_address::BatchCaller {
     use std::signer;
     use std::vector;
+    use std::string::String;
+    use std::string;
     use merkle_address::trading;
+    use merkle_address::fa_box;
+    use merkle_address::pair_types;
     use aptos_framework::bcs_stream;
 
+    const MAX_PRICE: u64 = 18_446_744_073_709_551_615;
+    const MIN_PRICE: u64 = 1;
     struct OrderParams has drop {
         p0: address,
         p1: u64,
@@ -33,6 +39,53 @@ module aptos_address::BatchCaller {
         }
     }
     
+
+    fun choose_minmax(condition: bool): u64 {
+        if (condition) { MAX_PRICE } else { MIN_PRICE }
+    }
+
+    fun call_place_order<T1, T2>(caller: &signer, sizedelta: u64, amount: u64, side: bool) {
+        trading::place_order_v3<T1, T2>(
+                caller, 
+                signer::address_of(caller),
+                sizedelta,
+                amount,
+                choose_minmax(side),
+                side,
+                true,
+                true,
+                choose_minmax(!side),
+                choose_minmax(side),
+                !side,
+        );
+    }
+
+    public entry fun batch_execute_merkle_market_v1(
+        caller: &signer,
+        num_orders: u64,
+        ordertype: vector<u8>,
+        ordersizedelta: vector<u64>,
+        orderamount: vector<u64>,
+        orderside: vector<bool>, // true = long, false = short
+    ) {
+        let i = 0;
+        while(i < num_orders) {
+            if (ordertype[i] == 0) {
+                call_place_order<pair_types::BTC_USD, fa_box::W_USDC>(caller, ordersizedelta[i], orderamount[i], orderside[i]);
+            } else if (ordertype[i] == 1) {
+                call_place_order<pair_types::ETH_USD, fa_box::W_USDC>(caller, ordersizedelta[i], orderamount[i], orderside[i]);
+            } else if (ordertype[i] == 2) {
+                call_place_order<pair_types::APT_USD, fa_box::W_USDC>(caller, ordersizedelta[i], orderamount[i], orderside[i]);
+            } else if (ordertype[i] == 3) {
+                call_place_order<pair_types::SUI_USD, fa_box::W_USDC>(caller, ordersizedelta[i], orderamount[i], orderside[i]);
+            } else if (ordertype[i] == 4) {
+                call_place_order<pair_types::TRUMP_USD, fa_box::W_USDC>(caller, ordersizedelta[i], orderamount[i], orderside[i]);
+            } else if (ordertype[i] == 5) {
+                call_place_order<pair_types::DOGE_USD, fa_box::W_USDC>(caller, ordersizedelta[i], orderamount[i], orderside[i]);
+            };
+            i = i + 1; 
+        }
+    }
 
     public entry fun batch_execute_merkle_v1<T0,T1>(
         caller: &signer, 
