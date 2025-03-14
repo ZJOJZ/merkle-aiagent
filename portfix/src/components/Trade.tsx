@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { aptosClient } from "@/utils/aptosClient";
-import { OpenPosition } from "@/entry-functions/merkleTrade";
+import { OpenPosition, CloseAllPosition } from "@/entry-functions/merkleTrade";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -240,6 +240,24 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
     }
   };
 
+  const onClickButton_close = async() => {
+    if (!account || !isClientReady) {
+        return;
+      }
+    try{
+        
+      for (let i = 0; i < tokenList.length; i++) {
+            const tx = await CloseAllPosition(`${tokenList[i].symbol}_USD`, account.address, merkle);
+            if(tx != undefined) {
+                const committedTransaction = await signAndSubmitTransaction(tx);
+                await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash});
+            }
+        }
+    } catch (error) {
+        console.error(error);
+    }
+  };
+
   useEffect(() => {
     // Define the function to fetch and process data
     const fetchTradeData = async () => {
@@ -307,6 +325,10 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
           <Button onClick={onClickButton} className="bg-blue-600 hover:bg-blue-700">
             Execute
           </Button>
+          <Button onClick={onClickButton_close} className="bg-blue-600 hover:bg-blue-700">
+            Close all position
+          </Button>
+          
         </div>
       </div>
     </div>
