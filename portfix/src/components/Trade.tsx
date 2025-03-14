@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-
 import { ChevronDown, ChevronUp, ChartCandlestick } from 'lucide-react';
 import { TokenIcon } from '@web3icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -193,21 +192,49 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
     }
 
     try {
-      // 依次处理每个交易对的开仓
-      // 计算实际交易金额并执行交易
-      for (let i = 0; i < tokenList.length; i++) {
-        const n = BigInt(Math.floor(amount[i] * totalinput)) * 10_000n;
-        if (n > 10_000_000n) {
-          console.log("111",i,`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
-          const transaction = await OpenPosition(`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
-          const committedTransaction = await signAndSubmitTransaction(transaction);
-          await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash});
+        let CoinId: Map<string, number> = new Map([
+            ['BTC_USD', 0], ['ETH_USD', 1], ['APT_USD', 2], ['SUI_USD', 3], ['TRUMP_USD', 4], ['DOGE_USD', 5]
+        ]);
+        let ordernum: bigint = 0n;
+        let ordertype: number[] = [];
+        let ordersizedelta: bigint[] = [];
+        let orderamount: bigint[] = [];
+        let orderside: boolean[] = [];
+        
+        for (let i = 0; i < tokenList.length; i++) { // move to batch tx; construct the argument of batchtx contract
+            const n = BigInt(Math.floor(amount[i] * totalinput)) * 10_000n;
+            if (n > 10_000_000n) {
+                console.log("111",i,`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
+                ordernum += 1n;
+                if (CoinId.has(`${tokenList[i].symbol}_USD`)) {
+                    ordertype.push(CoinId.get(`${tokenList[i].symbol}_USD`)!);
+                } else {
+                    throw new Error(`${tokenList[i].symbol}_USD not found in Coinmap`);
+                }
+                ordersizedelta.push(n * BigInt(lever[i]));
+                orderamount.push(n);
+                orderside.push(islong[i]);
+                //const transaction = await OpenPosition(`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
+                //const committedTransaction = await signAndSubmitTransaction(transaction);
+                //await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash});
+            }
         }
-      }
+        console.log("The number of txs", ordernum);
+        const committedTransaction = await signAndSubmitTransaction({ // submit the batch tx
+            data: {
+              function: `0x827b56914a808d9f638252cd9b3c1229a2c2bc606eb4f70f53c741350f1dea0e::BatchCaller::batch_execute_merkle_market_v1`,
+              functionArguments: [ordernum, ordertype, ordersizedelta, orderamount, orderside],
+            }
+            }
+          );
+        await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+
+           
+
       
-      queryClient.invalidateQueries({
-        queryKey: ["apt-balance", account?.address],
-      });
+        queryClient.invalidateQueries({
+            queryKey: ["apt-balance", account?.address],
+        });
     } catch (error) {
       console.error(error);
     }

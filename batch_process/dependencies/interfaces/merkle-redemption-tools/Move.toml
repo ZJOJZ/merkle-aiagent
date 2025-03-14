@@ -1,0 +1,18 @@
+[package]
+name = "merkle-redemption-tools"
+version = "1.0.0"
+
+[addresses]
+std = "0x1"
+aptos_std = "0x1"
+aptos_framework = "0x1"
+#redemption = "0xd47ead75b923422f7967257259e7a298f029da9e5484dc7aa1a9efbd4c3ae648" # mainnet
+#merkle = "0x5ae6789dd2fec1a9ec9cccfb3acaf12e93d432f0a3a42c92fe1a9d490b7bbc06" # testnet
+redemption = "0x834d9657e774f8ef2a6b4a5352937f34baa85a3c50a5ff93808fdc3723e4a202" # testnet
+merkle = "0x33a8693758d1d28a9305946c7758b7548a04736c35929eac22eb0de2a865275d" # testnet
+merkle_redemption_tools = "0xcf93155bab72399a4f9e9b673621e22ca300f54ebea2a98febc55d17f04aac57"
+
+[dependencies]
+AptosFramework = { git = 'https://github.com/aptos-labs/aptos-core.git', subdir = 'aptos-move/framework/aptos-framework', rev = '7fc73792e9db11462c9a42038c4a9eb41cc00192' }
+AptosStdlib = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-stdlib/", rev = "7fc73792e9db11462c9a42038c4a9eb41cc00192" }
+redemption = { local = "../interfaces/redemption"}
