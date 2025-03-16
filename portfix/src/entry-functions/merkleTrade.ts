@@ -1,6 +1,7 @@
-import { MerkleClient, Position} from "@merkletrade/ts-sdk";
+import { MerkleClient, Position, calcPnlWithoutFee} from "@merkletrade/ts-sdk";
 import { Aptos, type InputEntryFunctionData, SimpleTransaction} from "@aptos-labs/ts-sdk";
 import {AccountAddressInput} from "@aptos-labs/ts-sdk";
+import {priceFeedMap} from "@/components/Main";
 //import type { InputTransactionData } from "@aptos-labs/wallet-adapter-react";
 
 
@@ -45,11 +46,23 @@ export async function getTokenPosition(token: string, address: AccountAddressInp
        position.pairType.endsWith(token),
     );
     if(!position)
-        return[0,0]
-    if(position.isLong)
-        return [position.size, position.avgPrice];
-    else 
-        return [-position.size, position.avgPrice];
+        return[0,0,0]
+    const avgPrice = position.avgPrice;
+    const isLong = position.isLong;
+    const nowprice = BigInt(Math.floor(priceFeedMap.get(token).price * 10_000_000_000));
+    const size = position.size;
+    //console.log(token, nowprice, avgPrice)
+    
+    const pnl = calcPnlWithoutFee({
+        position: {avgPrice, isLong},
+        executePrice: nowprice as typeof position.avgPrice,
+        decreaseOrder: {sizeDelta: size},
+    });
+    console.log("rawpnl:", pnl)
+    if(isLong)
+        return [size, avgPrice, pnl];
+    else
+        return [-size, avgPrice, pnl];
 }
 
 export async function getBalance(address: AccountAddressInput, merkle: MerkleClient) {

@@ -30,6 +30,7 @@ interface Asset {
   pair: string;
   amount: bigint;
   avg_price: number;
+  pnl: number;
 }
 
 interface PortfolioProps {
@@ -43,20 +44,22 @@ export function Portfolio({ isClientReady }: PortfolioProps) {
     symbol: `${token.symbol}`,
     pair: token.pair,
     amount: 0n,
-    avg_price: 0
+    avg_price: 0,
+    pnl: 0,
   })));
 
   const updateAsset = async (pair: string) => {
     if (!account || !isClientReady) return;
     
-    const [size, price] = await getTokenPosition(pair, account.address, merkle);
+    const [size, price, pnl] = await getTokenPosition(pair, account.address, merkle);
     console.log(size, price);
     const newprice = Number(price) / Number(10000000000);
-    console.log(newprice, pair);
+    const pnl_usd = Number(pnl) / Number(1000000);
+    console.log(newprice, pair, pnl_usd);
     setAssets(prevAssets =>
       prevAssets.map(asset =>
         asset.pair === pair
-          ? { ...asset, amount: BigInt(size) / 1_000_000n, avg_price: newprice }
+          ? { ...asset, amount: BigInt(size) / 1_000_000n, avg_price: newprice, pnl: Number(pnl_usd),}
           : asset
       )
     );
@@ -137,7 +140,9 @@ export function Portfolio({ isClientReady }: PortfolioProps) {
                 <TableRow>
                   <TableHead>Type</TableHead>
                   <TableHead>Position</TableHead>
-                  <TableHead>Value</TableHead>
+                  <TableHead>Avg Price</TableHead>
+                  <TableHead>Pnl</TableHead>
+                  
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -146,7 +151,10 @@ export function Portfolio({ isClientReady }: PortfolioProps) {
                     <TableCell className="font-medium">{asset.symbol}</TableCell>
                     <TableCell>{asset.amount.toLocaleString('en-US')}</TableCell>
                     <TableCell>
-                      ${asset.avg_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      ${asset.avg_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                    <TableCell>
+                      ${asset.pnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    
                     </TableCell>
                   </TableRow>
                 ))}
