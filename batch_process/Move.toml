@@ -1,0 +1,11 @@
+[package]
+name = "batch_process"
+version = "0.0.0"
+
+[addresses]
+aptos_address = "0x827b56914a808d9f638252cd9b3c1229a2c2bc606eb4f70f53c741350f1dea0e"
+merkle_address = "0x33a8693758d1d28a9305946c7758b7548a04736c35929eac22eb0de2a865275d"
+
+[dependencies]
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-framework.git", subdir = "aptos-framework", rev = "testnet" }
+merkle = { local = "./dependencies/merkle" }

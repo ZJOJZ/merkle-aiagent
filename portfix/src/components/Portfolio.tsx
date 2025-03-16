@@ -1,5 +1,22 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Landmark, TrendingUp, ChartPie, WalletMinimal } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 import { useState, useEffect } from 'react';
 
@@ -56,72 +73,88 @@ export function Portfolio({ isClientReady }: PortfolioProps) {
       }
     };
     
-    myFunction(); // 立即执行一次
+    myFunction();
     const intervalId = setInterval(myFunction, 5000);
 
     return () => clearInterval(intervalId);
-  }, [account, isClientReady]); // 添加依赖项
+  }, [account, isClientReady]);
 
   if (!account || !isClientReady) {
     return null;
   }
 
   return (
-    <div className="mt-4 ml-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] max-h-[800px] overflow-auto border-2 border-white/50">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Portfolio</h2>
-        <WalletMinimal />
-      </div>
+    <div className="relative group mt-4 ml-4">
+      {/* div外发光效果 */}
+      <div className="glow-effect" />
+      
+      {/* 主容器：上下左右边距、弹性布局、圆角、半透明背景、最大宽高限制、滚动条、边框 */}
+      <div className="relative flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] overflow-auto border">
+        {/* 标题栏：两端对齐布局 */}
+        <div className="flex items-center justify-between space-y-0 pb-2">
+          <div className="text-2xl font-bold">Portfolio</div>
+          <WalletMinimal />
+        </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="border-4 border-white/50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xl font-medium">Total Value</CardTitle>
-            <Landmark />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              ${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 3 })}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-4 border-white/50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xl font-medium">24h Change</CardTitle>
-            <TrendingUp />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-500">+5.2%</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="border-4 border-white/50">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xl">Asset Breakdown</CardTitle>
-          <ChartPie />
-        </CardHeader>
-        
-        <CardContent>
-          <div className="grid grid-cols-3 items-center font-bold text-gray-400 pb-2 border-b border-gray-800">
-            <div>Type</div>
-            <div>Position</div>
-            <div>Value</div>
-          </div>
-          <div className="space-y-4">
-            {assets.map((asset: Asset, index: number) => (
-              <div key={index} className="flex grid grid-cols-4 items-center">
-                <div>{asset.symbol}</div>
-                <div>{asset.amount.toLocaleString('en-US')}</div>
-                <div style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
-                ${asset.avg_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </div>
+        {/* 数据卡片网格布局 */}
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* 总价值卡片 */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-xl font-medium">Total Value</CardTitle>
+              <Landmark />
+            </CardHeader>
+            <CardContent className="pt-2">
+              <div className="text-2xl font-bold">
+                ${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 3 })}
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+
+          {/* 24小时变化卡片 */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-xl font-medium">24h Change</CardTitle>
+              <TrendingUp />
+            </CardHeader>
+            <CardContent className="pt-2">
+              <div className="text-2xl font-bold">
+                +5.2%
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* 资产明细卡片 */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xl font-medium">Asset Breakdown</CardTitle>
+            <ChartPie />
+          </CardHeader>
+          <CardContent className="pt-2">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Position</TableHead>
+                  <TableHead>Value</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {assets.map((asset: Asset, index: number) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">{asset.symbol}</TableCell>
+                    <TableCell>{asset.amount.toLocaleString('en-US')}</TableCell>
+                    <TableCell>
+                      ${asset.avg_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
