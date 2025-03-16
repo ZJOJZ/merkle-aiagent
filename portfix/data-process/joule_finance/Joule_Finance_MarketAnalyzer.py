@@ -214,9 +214,13 @@ def get_joule_finance_market_data_analysis():
             for indicator in technical_indicators:
                 if indicator in binance_data:
                     market_data.loc[idx, f'{indicator}'] = binance_data[indicator]
-            
-    return market_data
+    
+    analysis_results = market_data.set_index('symbol')
+    result_dict = {k: {key: val for key, val in v.items() if pd.notna(val)} 
+                  for k, v in analysis_results.T.to_dict().items()}
+    
+    return result_dict
 
 if __name__ == "__main__":
     analysis_results = get_joule_finance_market_data_analysis()
-    print(analysis_results.set_index('symbol').T.to_dict())
+    print(analysis_results)
