@@ -32,7 +32,7 @@ export function Platform() {
   // 初始化Merkle客户端
   useEffect(() => {
     const initMerkle = async () => {
-      merkle = new MerkleClient(await MerkleClientConfig.mainnet());
+      merkle = new MerkleClient(await MerkleClientConfig.testnet());
       setIsClientReady(true);
     };
     const initAptosAgent = async() => {

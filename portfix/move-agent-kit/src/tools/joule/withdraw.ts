@@ -1,5 +1,6 @@
 import { AccountAddress, type InputGenerateTransactionPayloadData, type MoveStructId } from "@aptos-labs/ts-sdk"
 import type { AgentRuntime } from "../../agent"
+import type { InputTransactionData } from "@aptos-labs/wallet-adapter-react"
 
 /**
  * Withdraw APT, tokens or fungible asset from a position
@@ -18,7 +19,7 @@ import type { AgentRuntime } from "../../agent"
 export async function withdrawToken(
 	agent: AgentRuntime,
 	amount: number,
-	mint: MoveStructId,
+	mint: MoveStructId | string,
 	positionId: string,
 	fungibleAsset: boolean
 ): Promise<{
@@ -41,12 +42,23 @@ export async function withdrawToken(
 	}
 
 	try {
-		const transaction = await agent.aptos.transaction.build.simple({
-			sender: agent.account.getAddress(),
-			data: fungibleAsset ? FUNGIBLE_ASSET_DATA : COIN_STANDARD_DATA,
-		})
+		// const transaction = await agent.aptos.transaction.build.simple({
+		// 	sender: agent.account.getAddress(),
+		// 	data: fungibleAsset ? FUNGIBLE_ASSET_DATA : COIN_STANDARD_DATA,
+		// })
 
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
+		// const committedTransactionHash = await agent.account.sendTransaction(transaction)
+
+		const transaction : InputTransactionData = {
+					data:{
+						function: fungibleAsset ? FUNGIBLE_ASSET_DATA.function : COIN_STANDARD_DATA.function,
+						functionArguments: fungibleAsset ? FUNGIBLE_ASSET_DATA.functionArguments : COIN_STANDARD_DATA.functionArguments,
+						typeArguments: fungibleAsset ? FUNGIBLE_ASSET_DATA.typeArguments : COIN_STANDARD_DATA.typeArguments
+					}
+				}
+				
+				const committedTransactionHash = await agent.account.sendTransaction(transaction)
+		
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,

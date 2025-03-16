@@ -31,7 +31,7 @@ export class WalletSigner extends BaseSigner {
 	async sendTransaction(transaction: InputTransactionData | AnyRawTransaction): Promise<string> {
 		if('rawTransaction' in transaction) {
 			const signedTx = await this.wallet.signTransaction(transaction)
-
+			
 			const submittedTx = await this.aptos.transaction.submit.simple({
 				transaction,
 				senderAuthenticator: signedTx,
@@ -43,6 +43,7 @@ export class WalletSigner extends BaseSigner {
 			return result.hash
 			
 		} else if ('data' in transaction) {
+			console.log("tx:", transaction)
 			const txHash = await this.wallet.signAndSubmitTransaction(transaction);
 			return txHash.hash
 		} 

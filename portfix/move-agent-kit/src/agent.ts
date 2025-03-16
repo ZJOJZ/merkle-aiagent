@@ -127,7 +127,7 @@ export class AgentRuntime {
 		return burnNFT(this, mint)
 	}
 
-	lendToken(amount: number, mint: MoveStructId, positionId: string, newPosition: boolean, fungibleAsset: boolean) {
+	lendToken(amount: number, mint: MoveStructId | string, positionId: string, newPosition: boolean, fungibleAsset: boolean) {
 		return lendToken(this, amount, mint, positionId, newPosition, fungibleAsset)
 	}
 
@@ -135,7 +135,7 @@ export class AgentRuntime {
 		return borrowToken(this, amount, mint, positionId, fungibleAsset)
 	}
 
-	withdrawToken(amount: number, mint: MoveStructId, positionId: string, fungibleAsset: boolean) {
+	withdrawToken(amount: number, mint: MoveStructId | string, positionId: string, fungibleAsset: boolean) {
 		return withdrawToken(this, amount, mint, positionId, fungibleAsset)
 	}
 
