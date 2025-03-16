@@ -33,8 +33,8 @@ export function Welcome() {
 
                 {/* 钱包连接区域 - 带发光效果 */}
                 <div className="relative group">
-                  {/* 外发光效果 */}
-                  <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000" />
+                  {/* div外发光效果 */}
+                  <div className="glow-effect" />
 
                   {/* 主内容区 */}
                   <div className="relative p-8 bg-gradient-to-b from-card to-card backdrop-blur-sm rounded-lg leading-none">

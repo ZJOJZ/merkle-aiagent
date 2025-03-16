@@ -83,6 +83,18 @@
     --ring: 240 4.9% 83.9%;
   }
 }
+@layer components {
+  /* 定义div外发光样式 */
+  .glow-effect {
+    @apply absolute -inset-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-lg blur opacity-25;
+    transition: opacity 1000ms;
+  }
+  /* 修复hover状态的样式定义 */
+  .glow-effect:hover,
+  .group:hover .glow-effect {
+    @apply opacity-75;
+  }
+}
 
 @layer base {
   * {
