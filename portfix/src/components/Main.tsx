@@ -5,12 +5,15 @@ import { MerkleClient, MerkleClientConfig } from "@merkletrade/ts-sdk";
 import { Portfolio } from "@/components/Portfolio";
 import { TradeUI } from "@/components/Trade";
 import { MerkleTokenPair } from "@/components/MerklePair";
+import type {PriceFeed } from "@/types/api/wsapi";
 
 // 全局共享的 Merkle 客户端实例
 export let merkle: MerkleClient;
 
+export const priceFeedMap: Map<string, PriceFeed> = new Map();
 // Export 前6个交易对
 export const tokenList = MerkleTokenPair.slice(0, 6);
+
 
 export function Platform() {
   // Merkle客户端就绪状态
@@ -20,6 +23,19 @@ export function Platform() {
   useEffect(() => {
     const initMerkle = async () => {
       merkle = new MerkleClient(await MerkleClientConfig.testnet());
+      const session = await merkle.connectWsApi();
+      tokenList.forEach(token => {
+        (async () => {
+          try {
+            for await (const priceFeed of session.subscribePriceFeed(token.pair)) {
+              priceFeedMap.set(token.pair, priceFeed);
+              //console.log(`[Price Updated] ${token.pair}:`, priceFeed);
+            }
+          } catch (error) {
+            console.error(`Subscription error for ${token.pair}:`, error);
+          }
+        })();
+      });
       setIsClientReady(true);
     };
     

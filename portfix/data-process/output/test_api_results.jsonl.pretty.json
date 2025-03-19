@@ -1,0 +1,35 @@
+{
+  "actions": [
+    {
+      "symbol": "BTC",
+      "leverage": -50,
+      "position_percentage": 20,
+      "reason": "Short-term and medium-term moving averages show a bearish trend, with potential for further decline indicated by EMA death cross and SAR showing bearish trend."
+    },
+    {
+      "symbol": "ETH",
+      "leverage": -30,
+      "position_percentage": 20,
+      "reason": "Short-term and medium-term moving averages indicate a bearish trend, with potential for further decline suggested by EMA death cross and SAR showing bearish trend, despite some upward momentum."
+    },
+    {
+      "symbol": "APT",
+      "leverage": 100,
+      "position_percentage": 30,
+      "reason": "Strong upward trend with short-term and medium-term moving averages in a bullish arrangement, supported by EMA golden cross and SAR indicating a bullish trend."
+    },
+    {
+      "symbol": "SUI",
+      "leverage": -40,
+      "position_percentage": 15,
+      "reason": "Bearish trend indicated by short-term and medium-term moving averages, with potential for further decline suggested by EMA death cross and SAR showing bearish trend."
+    },
+    {
+      "symbol": "TRUMP",
+      "leverage": 80,
+      "position_percentage": 15,
+      "reason": "Despite short-term and medium-term moving averages showing a bearish trend, there's potential for upward movement indicated by EMA golden cross and SAR showing bullish trend."
+    }
+  ],
+  "timestamp": "2025-03-08T03:23:15.125544"
+}
