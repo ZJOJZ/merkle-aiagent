@@ -187,7 +187,7 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
    * 执行多个交易对的开仓操作
    */
   const onClickButton = async () => {
-    console.log(totalAmount);
+    //console.log(totalAmount);
     if (!account || !isClientReady) {
       return;
     }

@@ -131,7 +131,7 @@ export class AgentRuntime {
 		return lendToken(this, amount, mint, positionId, newPosition, fungibleAsset)
 	}
 
-	borrowToken(amount: number, mint: MoveStructId, positionId: string, fungibleAsset: boolean) {
+	borrowToken(amount: number, mint: MoveStructId | string, positionId: string, fungibleAsset: boolean) {
 		return borrowToken(this, amount, mint, positionId, fungibleAsset)
 	}
 
@@ -139,7 +139,7 @@ export class AgentRuntime {
 		return withdrawToken(this, amount, mint, positionId, fungibleAsset)
 	}
 
-	repayToken(amount: number, mint: MoveStructId, positionId: string, fungibleAsset: boolean) {
+	repayToken(amount: number, mint: MoveStructId | string, positionId: string, fungibleAsset: boolean) {
 		return repayToken(this, amount, mint, positionId, fungibleAsset)
 	}
 

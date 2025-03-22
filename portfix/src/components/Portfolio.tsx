@@ -33,9 +33,9 @@ export function Portfolio({ isClientReady }: PortfolioProps) {
     if (!account || !isClientReady) return;
     
     const [size, price] = await getTokenPosition(pair, account.address, merkle);
-    console.log(size, price);
+    //console.log(size, price);
     const newprice = Number(price) / Number(10000000000);
-    console.log(newprice, pair);
+    //console.log(newprice, pair);
     setAssets(prevAssets =>
       prevAssets.map(asset =>
         asset.pair === pair

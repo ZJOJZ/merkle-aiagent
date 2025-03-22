@@ -27,7 +27,8 @@ export async function withdrawToken(
 	positionId: string
 }> {
 	const pyth_update_data = await agent.getPythData()
-	console.log(pyth_update_data)
+	//console.log(pyth_update_data)
+
 	const DEFAULT_FUNCTIONAL_ARGS = [positionId, amount, pyth_update_data]
 
 	const COIN_STANDARD_DATA: InputGenerateTransactionPayloadData = {
@@ -49,15 +50,16 @@ export async function withdrawToken(
 
 		// const committedTransactionHash = await agent.account.sendTransaction(transaction)
 
+		
 		const transaction : InputTransactionData = {
-					data:{
-						function: fungibleAsset ? FUNGIBLE_ASSET_DATA.function : COIN_STANDARD_DATA.function,
-						functionArguments: fungibleAsset ? FUNGIBLE_ASSET_DATA.functionArguments : COIN_STANDARD_DATA.functionArguments,
-						typeArguments: fungibleAsset ? FUNGIBLE_ASSET_DATA.typeArguments : COIN_STANDARD_DATA.typeArguments
-					}
-				}
+			data:{
+				function: fungibleAsset ? FUNGIBLE_ASSET_DATA.function : COIN_STANDARD_DATA.function,
+				functionArguments: fungibleAsset ? FUNGIBLE_ASSET_DATA.functionArguments : COIN_STANDARD_DATA.functionArguments,
+				typeArguments: fungibleAsset ? FUNGIBLE_ASSET_DATA.typeArguments : COIN_STANDARD_DATA.typeArguments
+			}
+		}
 				
-				const committedTransactionHash = await agent.account.sendTransaction(transaction)
+		const committedTransactionHash = await agent.account.sendTransaction(transaction)
 		
 
 		const signedTransaction = await agent.aptos.waitForTransaction({

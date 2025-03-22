@@ -17,7 +17,6 @@ export let merkle: MerkleClient;
 export let aptos: Aptos;
 export let signer: WalletSigner;
 export let aptosAgent: AgentRuntime;
-
 // Export 前6个交易对
 export const tokenList = MerkleTokenPair.slice(0, 6);
 
@@ -38,6 +37,7 @@ export function Platform() {
     const initAptosAgent = async() => {
       const aptosConfig = new AptosConfig({
         network: Network.MAINNET,
+        fullnode: "https://fullnode.mainnet.aptoslabs.com/v1",
       });
       aptos = new Aptos(aptosConfig);
       signer = new WalletSigner(account, walletstate, Network.MAINNET); //use walletsigner
