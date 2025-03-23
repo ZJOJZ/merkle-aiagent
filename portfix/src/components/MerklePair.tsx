@@ -80,16 +80,16 @@ export const MerkleTokenPair = [
     //   skewFactor: 30000000,
     //   category: "Crypto"
     // },
-    {
-      symbol: "ADA",
-      pair: "ADA_USD",
-      fee: "0.04% / 0.08%",
-      minimumPay: 300,
-      leverage: "3 - 150",
-      maxOI: 200000,
-      skewFactor: 100000000,
-      category: "Crypto"
-    },
+    // {
+    //   symbol: "ADA",
+    //   pair: "ADA_USD",
+    //   fee: "0.04% / 0.08%",
+    //   minimumPay: 300,
+    //   leverage: "3 - 150",
+    //   maxOI: 200000,
+    //   skewFactor: 100000000,
+    //   category: "Crypto"
+    // },
     {
       symbol: "XRP",
       pair: "XRP_USD",
