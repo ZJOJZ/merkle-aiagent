@@ -5,6 +5,7 @@ import { MerkleClient, MerkleClientConfig } from "@merkletrade/ts-sdk";
 import { Portfolio } from "@/components/Portfolio";
 import { TradeUI } from "@/components/Trade";
 import { MerkleTokenPair } from "@/components/MerklePair";
+import type {PriceFeed } from "@/types/api/wsapi";
 
 import { AgentRuntime, WalletSigner} from "../../move-agent-kit/src";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
@@ -17,8 +18,10 @@ export let merkle: MerkleClient;
 export let aptos: Aptos;
 export let signer: WalletSigner;
 export let aptosAgent: AgentRuntime;
+export const priceFeedMap: Map<string, PriceFeed> = new Map();
 // Export 前6个交易对
 export const tokenList = MerkleTokenPair.slice(0, 6);
+
 
 export function Platform() {
   // Merkle客户端就绪状态
@@ -32,6 +35,19 @@ export function Platform() {
   useEffect(() => {
     const initMerkle = async () => {
       merkle = new MerkleClient(await MerkleClientConfig.testnet());
+      const session = await merkle.connectWsApi();
+      tokenList.forEach(token => {
+        (async () => {
+          try {
+            for await (const priceFeed of session.subscribePriceFeed(token.pair)) {
+              priceFeedMap.set(token.pair, priceFeed);
+              //console.log(`[Price Updated] ${token.pair}:`, priceFeed);
+            }
+          } catch (error) {
+            console.error(`Subscription error for ${token.pair}:`, error);
+          }
+        })();
+      });
       setIsClientReady(true);
     };
     const initAptosAgent = async() => {

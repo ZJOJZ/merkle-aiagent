@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-
 import { ChevronDown, ChevronUp, ChartCandlestick } from 'lucide-react';
 import { TokenIcon } from '@web3icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { aptosClient } from "@/utils/aptosClient";
-import { OpenPosition } from "@/entry-functions/merkleTrade";
+import { OpenPosition, CloseAllPosition } from "@/entry-functions/merkleTrade";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -193,22 +192,69 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
     }
 
     try {
-      // 依次处理每个交易对的开仓
-      // 计算实际交易金额并执行交易
-      for (let i = 0; i < tokenList.length; i++) {
-        const n = BigInt(Math.floor(amount[i] * totalinput)) * 10_000n;
-        if (n > 10_000_000n) {
-          const transaction = await OpenPosition(`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
-          const committedTransaction = await signAndSubmitTransaction(transaction);
-          await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash});
+        let CoinId: Map<string, number> = new Map([
+            ['BTC_USD', 0], ['ETH_USD', 1], ['APT_USD', 2], ['SUI_USD', 3], ['TRUMP_USD', 4], ['DOGE_USD', 5]
+        ]);
+        let ordernum: bigint = 0n;
+        let ordertype: number[] = [];
+        let ordersizedelta: bigint[] = [];
+        let orderamount: bigint[] = [];
+        let orderside: boolean[] = [];
+        
+        for (let i = 0; i < tokenList.length; i++) { // move to batch tx; construct the argument of batchtx contract
+            const n = BigInt(Math.floor(amount[i] * totalinput)) * 10_000n;
+            if (n > 10_000_000n) {
+                console.log("111",i,`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
+                ordernum += 1n;
+                if (CoinId.has(`${tokenList[i].symbol}_USD`)) {
+                    ordertype.push(CoinId.get(`${tokenList[i].symbol}_USD`)!);
+                } else {
+                    throw new Error(`${tokenList[i].symbol}_USD not found in Coinmap`);
+                }
+                ordersizedelta.push(n * BigInt(lever[i]));
+                orderamount.push(n);
+                orderside.push(islong[i]);
+                //const transaction = await OpenPosition(`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
+                //const committedTransaction = await signAndSubmitTransaction(transaction);
+                //await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash});
+            }
         }
-      }
+        console.log("The number of txs", ordernum);
+        const committedTransaction = await signAndSubmitTransaction({ // submit the batch tx
+            data: {
+              function: `0x827b56914a808d9f638252cd9b3c1229a2c2bc606eb4f70f53c741350f1dea0e::BatchCaller::batch_execute_merkle_market_v1`,
+              functionArguments: [ordernum, ordertype, ordersizedelta, orderamount, orderside],
+            }
+            }
+          );
+        await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+
+           
+
       
-      queryClient.invalidateQueries({
-        queryKey: ["apt-balance", account?.address],
-      });
+        queryClient.invalidateQueries({
+            queryKey: ["apt-balance", account?.address],
+        });
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const onClickButton_close = async() => {
+    if (!account || !isClientReady) {
+        return;
+      }
+    try{
+        
+      for (let i = 0; i < tokenList.length; i++) {
+            const tx = await CloseAllPosition(`${tokenList[i].symbol}_USD`, account.address, merkle);
+            if(tx != undefined) {
+                const committedTransaction = await signAndSubmitTransaction(tx);
+                await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash});
+            }
+        }
+    } catch (error) {
+        console.error(error);
     }
   };
 
@@ -224,7 +270,7 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
         
         // Set the state with actual data
         setTransferAmount(portion_result);
-        setLever(leverageValues);
+        setLever(leverageValues.map((leverage: number) => Math.abs(leverage)));
         // Determine long/short based on leverage sign (positive = long, negative = short)
         setLong(leverageValues.map((leverage: number) => leverage > 0));
       } catch (error) {
@@ -234,13 +280,26 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
       }
     };
 
-    // Call the function
+    // Initial fetch
     fetchTradeData();
+
+    // Set up polling interval (e.g., every 10 seconds)
+    const intervalId = setInterval(fetchTradeData, 10000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
   }, []); // Empty dependency array means this runs once on component mount
 
   return (
-    <div className="mt-4 mr-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] border-2 border-white/50">
-      <div className="flex items-center justify-between">
+    <div className="relative group mt-4 ml-4">
+    {/* div外发光效果 */}
+    <div className="glow-effect" />
+    
+    {/* 主容器：上下左右边距、弹性布局、圆角、半透明背景、最大宽高限制、滚动条、边框 */}
+    <div className="relative flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] overflow-auto border">
+    {/* <div className="mt-4 mr-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] border-2 border-white/50"> */}
+      {/* 标题栏：两端对齐布局 */}
+      <div className="flex items-center justify-between space-y-0 pb-2">
         <h2 className="text-2xl font-bold">Trade</h2>
         <ChartCandlestick />
       </div>
@@ -273,8 +332,13 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
           <Button onClick={onClickButton} className="bg-blue-600 hover:bg-blue-700">
             Execute
           </Button>
+          <Button onClick={onClickButton_close} className="bg-blue-600 hover:bg-blue-700">
+            Close all position
+          </Button>
+          
         </div>
       </div>
+    </div>
     </div>
   );
 }
