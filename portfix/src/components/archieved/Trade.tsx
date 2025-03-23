@@ -160,7 +160,7 @@ export const Trade = () => {
     // 初始化Merkle客户端
     useEffect(() => {
         const initMerkle = async () => {
-            merkle = new MerkleClient(await MerkleClientConfig.testnet());
+            merkle = new MerkleClient(await MerkleClientConfig.mainnet());
             setIsClientReady(true);
         };
         
