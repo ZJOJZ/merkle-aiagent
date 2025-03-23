@@ -1,16 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MerkleClient, MerkleClientConfig } from "@merkletrade/ts-sdk";
+import { MerkleClient, MerkleClientConfig, PriceFeed } from "@merkletrade/ts-sdk";
 import { Portfolio } from "@/components/Portfolio";
 import { TradeUI } from "@/components/Trade";
 import { MerkleTokenPair } from "@/components/MerklePair";
-import type {PriceFeed } from "@/types/api/wsapi";
 
 // 全局共享的 Merkle 客户端实例
 export let merkle: MerkleClient;
 
 export const priceFeedMap: Map<string, PriceFeed> = new Map();
+
 // Export 前6个交易对
 export const tokenList = MerkleTokenPair.slice(0, 6);
 
