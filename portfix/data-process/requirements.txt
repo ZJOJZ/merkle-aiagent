@@ -1,0 +1,4 @@
+openai
+aptos-sdk
+pandas
+TA-Lib

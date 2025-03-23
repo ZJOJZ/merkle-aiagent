@@ -1,0 +1,15 @@
+[package]
+name = 'redemption'
+version = '1.0.0'
+
+[addresses]
+std = "0x1"
+aptos_std = "0x1"
+aptos_framework = "0x1"
+redemption = "0x834d9657e774f8ef2a6b4a5352937f34baa85a3c50a5ff93808fdc3723e4a202"
+
+[dependencies]
+AptosFramework = { git = 'https://github.com/aptos-labs/aptos-core.git', subdir = 'aptos-move/framework/aptos-framework', rev = '351918d1c8ab13db2b586851c480df1036593cfb' }
+AptosToken = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-token/", rev = "351918d1c8ab13db2b586851c480df1036593cfb" }
+AptosTokenObjects = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-token-objects/", rev = "351918d1c8ab13db2b586851c480df1036593cfb" }
+AptosStdlib = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-stdlib/", rev = "351918d1c8ab13db2b586851c480df1036593cfb" }

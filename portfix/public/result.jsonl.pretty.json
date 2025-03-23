@@ -1,0 +1,35 @@
+{
+  "actions": [
+    {
+      "symbol": "BTC",
+      "leverage": -50,
+      "position_percentage": 20,
+      "reason": "Short-term and medium-term moving averages show a bearish trend, with a clear downward momentum indicated by EMA death cross and SAR showing bearish trend."
+    },
+    {
+      "symbol": "ETH",
+      "leverage": 30,
+      "position_percentage": 25,
+      "reason": "Despite short-term bearish indicators, DMI shows an upward trend and ROC is positive, indicating potential upward momentum."
+    },
+    {
+      "symbol": "APT",
+      "leverage": 100,
+      "position_percentage": 30,
+      "reason": "Strong upward trend with moving averages in a bullish alignment, EMA golden cross, and positive ROC indicating strong upward momentum."
+    },
+    {
+      "symbol": "SUI",
+      "leverage": -40,
+      "position_percentage": 15,
+      "reason": "Bearish trend with moving averages in a bearish alignment, EMA death cross, and negative ROC indicating downward momentum."
+    },
+    {
+      "symbol": "TRUMP",
+      "leverage": 80,
+      "position_percentage": 10,
+      "reason": "EMA golden cross, SAR showing bullish trend, and positive ROC indicating upward momentum despite some mixed indicators."
+    }
+  ],
+  "timestamp": "2025-03-08T03:50:13.813634"
+}

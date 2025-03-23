@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-
 import { ChevronDown, ChevronUp, ChartCandlestick } from 'lucide-react';
 import { TokenIcon } from '@web3icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { aptosClient } from "@/utils/aptosClient";
-import { OpenPosition } from "@/entry-functions/merkleTrade";
+import { OpenPosition, CloseAllPosition } from "@/entry-functions/merkleTrade";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -193,56 +192,114 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
     }
 
     try {
-      // 依次处理每个交易对的开仓
-      // 计算实际交易金额并执行交易
-      for (let i = 0; i < tokenList.length; i++) {
-        const n = BigInt(Math.floor(amount[i] * totalinput)) * 10_000n;
-        if (n > 10_000_000n) {
-          const transaction = await OpenPosition(`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
-          const committedTransaction = await signAndSubmitTransaction(transaction);
-          await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash});
+        let CoinId: Map<string, number> = new Map([
+            ['BTC_USD', 0], ['ETH_USD', 1], ['APT_USD', 2], ['SUI_USD', 3], ['TRUMP_USD', 4], ['DOGE_USD', 5]
+        ]);
+        let ordernum: bigint = 0n;
+        let ordertype: number[] = [];
+        let ordersizedelta: bigint[] = [];
+        let orderamount: bigint[] = [];
+        let orderside: boolean[] = [];
+        
+        for (let i = 0; i < tokenList.length; i++) { // move to batch tx; construct the argument of batchtx contract
+            const n = BigInt(Math.floor(amount[i] * totalinput)) * 10_000n;
+            if (n > 10_000_000n) {
+                console.log("111",i,`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
+                ordernum += 1n;
+                if (CoinId.has(`${tokenList[i].symbol}_USD`)) {
+                    ordertype.push(CoinId.get(`${tokenList[i].symbol}_USD`)!);
+                } else {
+                    throw new Error(`${tokenList[i].symbol}_USD not found in Coinmap`);
+                }
+                ordersizedelta.push(n * BigInt(lever[i]));
+                orderamount.push(n);
+                orderside.push(islong[i]);
+                //const transaction = await OpenPosition(`${tokenList[i].symbol}_USD`, n, islong[i], lever[i], account.address, merkle);
+                //const committedTransaction = await signAndSubmitTransaction(transaction);
+                //await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash});
+            }
         }
-      }
+        console.log("The number of txs", ordernum);
+        const committedTransaction = await signAndSubmitTransaction({ // submit the batch tx
+            data: {
+              function: `0x827b56914a808d9f638252cd9b3c1229a2c2bc606eb4f70f53c741350f1dea0e::BatchCaller::batch_execute_merkle_market_v1`,
+              functionArguments: [ordernum, ordertype, ordersizedelta, orderamount, orderside],
+            }
+            }
+          );
+        await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash,});
+
+           
+
       
-      queryClient.invalidateQueries({
-        queryKey: ["apt-balance", account?.address],
-      });
+        queryClient.invalidateQueries({
+            queryKey: ["apt-balance", account?.address],
+        });
     } catch (error) {
       console.error(error);
     }
   };
 
-  useEffect(() => {
-    // 定义需要定期执行的函数
-    const myFunction = () => {
-      const randomNumbers = Array.from({ length: tokenList.length - 1 }, () => Math.random() * 100);
-      randomNumbers.sort((a, b) => a - b);
-      randomNumbers.unshift(0);
-      randomNumbers.push(100);
-      const portion_result = [];
-      for (let i = 1; i < randomNumbers.length; i++) {
-        portion_result.push(parseFloat((randomNumbers[i] - randomNumbers[i - 1]).toFixed(2)));
+  const onClickButton_close = async() => {
+    if (!account || !isClientReady) {
+        return;
       }
-      const randomIntegers: number[] = [];
+    try{
+        
       for (let i = 0; i < tokenList.length; i++) {
-        const randomInt = Math.floor(Math.random() * (120 - 30 + 1)) + 30;
-        randomIntegers.push(randomInt);
-      }
-      console.log(portion_result);
-      setTransferAmount(portion_result);
-      setLever(randomIntegers);
-      setLong(Array.from({ length: tokenList.length }, () => Math.random() < 0.5));
-    };
-    
-    const intervalId = setInterval(myFunction, 30000);
-    myFunction(); // 立即执行一次
+            const tx = await CloseAllPosition(`${tokenList[i].symbol}_USD`, account.address, merkle);
+            if(tx != undefined) {
+                const committedTransaction = await signAndSubmitTransaction(tx);
+                await aptosClient().waitForTransaction({transactionHash: committedTransaction.hash});
+            }
+        }
+    } catch (error) {
+        console.error(error);
+    }
+  };
 
+  useEffect(() => {
+    // Define the function to fetch and process data
+    const fetchTradeData = async () => {
+      try {
+        const response = await fetch('/result.jsonl.pretty.json');
+        const tradeData = await response.json();
+        // Extract position percentages and leverage values from actions
+        const portion_result = tradeData.actions.map((action: { position_percentage: number }) => action.position_percentage);
+        const leverageValues = tradeData.actions.map((action: { leverage: number }) => action.leverage);
+        
+        // Set the state with actual data
+        setTransferAmount(portion_result);
+        setLever(leverageValues.map((leverage: number) => Math.abs(leverage)));
+        // Determine long/short based on leverage sign (positive = long, negative = short)
+        setLong(leverageValues.map((leverage: number) => leverage > 0));
+      } catch (error) {
+        console.error('Error fetching trade data:', error);
+        // Fallback to random values if fetch fails
+        // ... existing random generation code ...
+      }
+    };
+
+    // Initial fetch
+    fetchTradeData();
+
+    // Set up polling interval (e.g., every 10 seconds)
+    const intervalId = setInterval(fetchTradeData, 10000);
+
+    // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
-  }, []); // 空数组作为依赖，确保只在组件挂载和卸载时执行
+  }, []); // Empty dependency array means this runs once on component mount
 
   return (
-    <div className="mt-4 mr-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] border-2 border-white/50">
-      <div className="flex items-center justify-between">
+    <div className="relative group mt-4 ml-4">
+    {/* div外发光效果 */}
+    <div className="glow-effect" />
+    
+    {/* 主容器：上下左右边距、弹性布局、圆角、半透明背景、最大宽高限制、滚动条、边框 */}
+    <div className="relative flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] overflow-auto border">
+    {/* <div className="mt-4 mr-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] border-2 border-white/50"> */}
+      {/* 标题栏：两端对齐布局 */}
+      <div className="flex items-center justify-between space-y-0 pb-2">
         <h2 className="text-2xl font-bold">Trade</h2>
         <ChartCandlestick />
       </div>
@@ -275,8 +332,13 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
           <Button onClick={onClickButton} className="bg-blue-600 hover:bg-blue-700">
             Execute
           </Button>
+          <Button onClick={onClickButton_close} className="bg-blue-600 hover:bg-blue-700">
+            Close all position
+          </Button>
+          
         </div>
       </div>
+    </div>
     </div>
   );
 }
