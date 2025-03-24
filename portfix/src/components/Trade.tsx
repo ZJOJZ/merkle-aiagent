@@ -47,8 +47,28 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
     }
   };
 
+  // 处理单个交易对杠杆倍数变化
+  const handleLeverageChange = (symbol: string, newLeverage: number) => {
+    const index = tokenList.findIndex(token => token.symbol === symbol);
+    if (index !== -1) {
+      const newLevers = [...lever];
+      newLevers[index] = newLeverage;
+      setLever(newLevers);
+    }
+  };
+
+  // 处理单个交易对仓位方向变化
+  const handlePositionChange = (symbol: string, newPosition: string) => {
+    const index = tokenList.findIndex(token => token.symbol === symbol);
+    if (index !== -1) {
+      const newIsLong = [...islong];
+      newIsLong[index] = newPosition === 'long';
+      setLong(newIsLong);
+    }
+  };
+
   // 用户输入的总金额
-  const [totalinput, settotalinput] = useState<number>(0);
+  const [totalinput, settotalinput] = useState<number>(1000);
   
   // 各交易对的仓位方向状态(long/short)
   const [islong, setLong] = useState<boolean[]>(Array(tokenList.length).fill(true));
@@ -208,19 +228,21 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
             isExpanded={expandedCard === card.symbol}
             onToggle={() => handleToggle(card.symbol)}
             onAmountChange={(newAmount) => handleAmountChange(card.symbol, newAmount)}
+            onLeverageChange={(newLeverage) => handleLeverageChange(card.symbol, newLeverage)}
+            onPositionChange={(newPosition) => handlePositionChange(card.symbol, newPosition)}
           />
         ))}
       </div>
       {/* 添加底部栏 */}
       <div className="mt-4 pt-4 border-t border-white/20">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <span className="text-gray-400 text-xl">Total Amount:</span>
+          <div className="flex items-center gap-3">
+            <span className="text-gray-400 text-xl">Total Amount</span>
             <Input
               type="number"
-              value={totalinput}
               onChange={(e) => settotalinput(Number(e.target.value))}
-              className="w-32 bg-black/20"
+              placeholder={`${totalAmount}`}
+              className="w-32"
             />
           </div>
           <Button onClick={onClickButton}>

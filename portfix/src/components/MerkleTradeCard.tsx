@@ -5,6 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import * as AntIcons from '@ant-design/web3-icons';
 import { motion, AnimatePresence } from "motion/react";
+import React, { useState } from "react";
 
 
 /**
@@ -19,15 +20,26 @@ export interface TradeCardProps {
   isExpanded: boolean;   // 是否展开详情
   onToggle: () => void;  // 展开/收起回调函数
   onAmountChange?: (amount: number) => void; // 金额修改回调函数
+  onLeverageChange?: (leverage: number) => void; // 杠杆倍数修改回调函数
+  onPositionChange?: (position: string) => void; // 仓位方向修改回调函数
 }
 
 /**
  * TradeCard组件 - 展示单个交易对的卡片
  * 包含交易对信息、仓位方向、金额占比和详细信息
  */
-export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isExpanded, onToggle, onAmountChange }: TradeCardProps) => {
+export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isExpanded, onToggle, onAmountChange, onLeverageChange, onPositionChange }: TradeCardProps) => {
   // 计算当前交易金额占总金额的百分比
   const percent = totalAmount > 0 ? amount / totalAmount : 0;
+  
+  // 管理杠杆倍数状态
+  const [leverage, setLeverage] = useState(leverageDefault);
+
+  // 处理杠杆倍数变化
+  const handleLeverageChange = (value: number) => {
+    setLeverage(value);
+    onLeverageChange?.(value);
+  };
 
   // 将symbol转换为AntDesign组件名称的映射函数
   const getIconComponentName = (symbol: string): string => {
@@ -91,10 +103,27 @@ export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span>Leverage</span>
-                <span>{Math.round(leverageDefault)}x</span>
+                <div className="flex items-center relative">
+                  <Input
+                    id="leverage"
+                    type="number"
+                    value={leverage}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      if (value >= 3 && value <= 150) {
+                        handleLeverageChange(value);
+                      }
+                    }}
+                    className="w-20"
+                  />
+                  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                  <span className="text-muted-foreground">x</span>
+                </div>
+                </div>
               </div>
               <Slider
-                defaultValue={[leverageDefault]}
+                value={[leverage]}
+                onValueChange={(value) => handleLeverageChange(value[0])}
                 max={150}
                 min={3}
                 step={1}
@@ -108,6 +137,7 @@ export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, 
                 <Input
                   type="number"
                   value={amount}
+                  min={0}
                   onChange={(e) => onAmountChange?.(Number(e.target.value))}
                   className="pr-16"
                 />
@@ -125,6 +155,7 @@ export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, 
                     ? 'bg-green-600 hover:bg-green-700 text-white'
                     : 'bg-green-600/20 hover:bg-green-600/30 text-green-500'
                     } py-2`}
+                  onClick={() => onPositionChange?.('long')}
                 >
                   Long
                 </Button>
@@ -133,6 +164,7 @@ export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, 
                   ? 'bg-red-600 hover:bg-red-700 text-white'
                   : 'bg-red-600/20 hover:bg-red-600/30 text-red-500'
                   } py-2`}
+                  onClick={() => onPositionChange?.('short')}
                 >
                   Short
                 </Button>

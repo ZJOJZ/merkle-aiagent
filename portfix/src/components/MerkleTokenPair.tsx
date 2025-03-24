@@ -90,16 +90,16 @@ export const MerkleTokenPair = [
     //   skewFactor: 100000000,
     //   category: "Crypto"
     // },
-    {
-      symbol: "XRP",
-      pair: "XRP_USD",
-      fee: "0.04% / 0.08%",
-      minimumPay: 300,
-      leverage: "3 - 150",
-      maxOI: 200000,
-      skewFactor: 100000000,
-      category: "Crypto"
-    },
+    // {
+    //   symbol: "XRP",
+    //   pair: "XRP_USD",
+    //   fee: "0.04% / 0.08%",
+    //   minimumPay: 300,
+    //   leverage: "3 - 150",
+    //   maxOI: 200000,
+    //   skewFactor: 100000000,
+    //   category: "Crypto"
+    // },
     // {
     //   symbol: "NEIRO",
     //   pair: "NEIRO_USD",
@@ -160,16 +160,16 @@ export const MerkleTokenPair = [
     //   skewFactor: 45000000,
     //   category: "Crypto"
     // },
-    // {
-    //   symbol: "DOGE",
-    //   pair: "DOGE_USD",
-    //   fee: "0.04% / 0.08%",
-    //   minimumPay: 300,
-    //   leverage: "3 - 150",
-    //   maxOI: 200000,
-    //   skewFactor: 100000000,
-    //   category: "Crypto"
-    // },
+    {
+      symbol: "DOGE",
+      pair: "DOGE_USD",
+      fee: "0.04% / 0.08%",
+      minimumPay: 300,
+      leverage: "3 - 150",
+      maxOI: 200000,
+      skewFactor: 100000000,
+      category: "Crypto"
+    },
     // {
     //   symbol: "EIGEN",
     //   pair: "EIGEN_USD",
