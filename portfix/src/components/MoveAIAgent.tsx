@@ -1,8 +1,8 @@
 "use client"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 
@@ -145,97 +145,113 @@ export function MoveAIAgent({ isaptosAgentReady }: AgentUIProps) {
     // Corrected return statement using shadcn UI card
     console.log(userPositions)
     return (
-        <Card>
-            <CardContent>
+          <div className="space-y-2">
                 {/* <div>Transfer Result: {JSON.stringify(result)}</div> */}
-                <div>Balance: {balance}</div>
+                {/* <div>Balance: {balance}</div> */}
                 {/* <div>Transaction Info: {JSON.stringify(txInfo)}</div> */}
             <div className="flex items-center gap-2">
-            <span className="text-gray-400 text-xl">Total Lend:</span>
+            <span>Lend</span>
             <Input
               type="number"
               value={totallend}
               onChange={(e) => settotallend(Number(e.target.value))}
-              className="w-32 bg-black/20"
+              className="w-36"
             />
-            <span className="text-gray-400 text-xl ml-4">Position:</span>
-            <Input
-              id="plend"
-              type="text"
-              value={plend}
-              onChange={(e) => setplend(e.target.value)}
-              className="w-32 bg-black/20"
-            />
-            </div>
+            <Select value={plend} onValueChange={setplend} defaultValue={userPositions?.[0]?.positions_map?.data?.[0]?.key}>
+              <SelectTrigger >
+                <SelectValue placeholder="Select position" />
+              </SelectTrigger>
+              <SelectContent>
+                {userPositions?.[0]?.positions_map?.data?.map((position) => (
+                  <SelectItem key={position.key} value={position.key}>
+                    {position.value.position_name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button onClick={onClickButton_lend}>
                 Execute
             </Button>
+            </div>
+            
 
             <div className="flex items-center gap-2">
-            <span className="text-gray-400 text-xl">Total Withdraw:</span>
+            <span>Withdraw</span>
             <Input
               type="number"
               value={totalwithdraw}
               onChange={(e) => settotalwithdraw(Number(e.target.value))}
-              className="w-32 bg-black/20"
+              className="w-36"
             />
-            <span className="text-gray-400 text-xl ml-4">Position:</span>
-            <Input
-              id="pwithdraw"
-              type="text"
-              value={pwithdraw}
-              onChange={(e) => setpwithdraw(e.target.value)}
-              className="w-32 bg-black/20"
-            />
-            </div>
+            <Select value={pwithdraw} onValueChange={setpwithdraw} defaultValue={userPositions?.[0]?.positions_map?.data?.[0]?.key}>
+              <SelectTrigger >
+                <SelectValue placeholder="Select position" />
+              </SelectTrigger>
+              <SelectContent>
+                {userPositions?.[0]?.positions_map?.data?.map((position) => (
+                  <SelectItem key={position.key} value={position.key}>
+                    {position.value.position_name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button onClick={onClickButton_withdraw}>
                 Execute
             </Button>
+            </div>
 
 
             <div className="flex items-center gap-2">
-            <span className="text-gray-400 text-xl">Total Borrow:</span>
+            <span>Borrow</span>
             <Input
               type="number"
               value={totalborrow}
               onChange={(e) => settotalborrow(Number(e.target.value))}
-              className="w-32 bg-black/20"
+              className="w-36"
             />
-            <span className="text-gray-400 text-xl ml-4">Position:</span>
-            <Input
-              id="pborrow"
-              type="text"
-              value={pborrow}
-              onChange={(e) => setpborrow(e.target.value)}
-              className="w-32 bg-black/20"
-            />
-            </div>
+            <Select value={pborrow} onValueChange={setpborrow} defaultValue={userPositions?.[0]?.positions_map?.data?.[0]?.key}>
+              <SelectTrigger >
+                <SelectValue placeholder="Select position" />
+              </SelectTrigger>
+              <SelectContent>
+                {userPositions?.[0]?.positions_map?.data?.map((position) => (
+                  <SelectItem key={position.key} value={position.key}>
+                    {position.value.position_name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button onClick={onClickButton_borrow}>
                 Execute
             </Button>
+            </div>
+            
 
             <div className="flex items-center gap-2">
-            <span className="text-gray-400 text-xl">Total Repay:</span>
+            <span>Repay</span>
             <Input
               type="number"
               value={totalrepay}
               onChange={(e) => settotalrepay(Number(e.target.value))}
-              className="w-32 bg-black/20"
+              className="w-36"
             />
-            <span className="text-gray-400 text-xl ml-4">Position:</span>
-            <Input
-              id="prepay"
-              type="text"
-              value={prepay}
-              onChange={(e) => setprepay(e.target.value)}
-              className="w-32 bg-black/20"
-            />
-            </div>
+            <Select value={prepay} onValueChange={setprepay} defaultValue={userPositions?.[0]?.positions_map?.data?.[0]?.key}>
+              <SelectTrigger >
+                <SelectValue placeholder="Select position" />
+              </SelectTrigger>
+              <SelectContent>
+                {userPositions?.[0]?.positions_map?.data?.map((position) => (
+                  <SelectItem key={position.key} value={position.key}>
+                    {position.value.position_name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
             <Button onClick={onClickButton_repay}>
                 Execute
             </Button>
-
-            </CardContent>
-        </Card>
+            </div>
+</div>
     );
 }

@@ -240,12 +240,12 @@ export function TradeUI({ isClientReady, isaptosAgentReady }: TradeUIProps) {
       <div className="mt-4 pt-4 border-t border-white/20">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <span className="text-gray-400 text-xl">Total Amount</span>
+            <span>Amount</span>
             <Input
               type="number"
               onChange={(e) => settotalinput(Number(e.target.value))}
-              placeholder={`${totalAmount}`}
-              className="w-32"
+              placeholder={`${totalAmount} USDC`}
+              className="w-36"
             />
           </div>
           <Button onClick={onClickButton}>
@@ -268,27 +268,7 @@ export function TradeUI({ isClientReady, isaptosAgentReady }: TradeUIProps) {
       <div className="space-y-2">
       <MoveAIAgent isaptosAgentReady={isaptosAgentReady} />
       </div>
-      {/* 添加底部栏 */}
-      <div className="mt-4 pt-4 border-t border-white/20">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <span className="text-gray-400 text-xl">Total Amount</span>
-            <Input
-              type="number"
-              onChange={(e) => settotalinput(Number(e.target.value))}
-              placeholder={`${totalAmount}`}
-              className="w-32"
-            />
-          </div>
-          <Button onClick={onClickButton}>
-            Execute
-          </Button>
-          <Button onClick={onClickButton_close}>
-            Close all position
-          </Button>
-          
-        </div>
-      </div>
+
       </div>
     </div>
   );
