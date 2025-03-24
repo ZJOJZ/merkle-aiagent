@@ -107,7 +107,7 @@ export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, 
                   <Input
                     id="leverage"
                     type="number"
-                    value={leverage}
+                    value={leverageDefault}
                     onChange={(e) => {
                       const value = Number(e.target.value);
                       if (value >= 3 && value <= 150) {
@@ -122,7 +122,7 @@ export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, 
                 </div>
               </div>
               <Slider
-                value={[leverage]}
+                value={[leverageDefault]}
                 onValueChange={(value) => handleLeverageChange(value[0])}
                 max={150}
                 min={3}
