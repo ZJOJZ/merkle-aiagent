@@ -1,6 +1,7 @@
 import { Landmark, TrendingUp, ChartPie, WalletMinimal } from "lucide-react";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import * as AntIcons from '@ant-design/web3-icons';
 
 import { useState, useEffect } from 'react';
 
@@ -22,6 +23,14 @@ interface PortfolioProps {
 }
 
 export function Portfolio({ isClientReady }: PortfolioProps) {
+  // 将symbol转换为AntDesign组件名称的映射函数
+  const getIconComponentName = (symbol: string): string => {
+    if (symbol.toLowerCase() === 'eth') {
+      return 'EthereumCircleColorful';
+    }
+    const capitalizedSymbol = symbol.charAt(0).toUpperCase() + symbol.slice(1).toLowerCase();
+    return `${capitalizedSymbol}CircleColorful`;
+  };
   const { account } = useWallet();
   const [price, setPrice] = useState<number>(0);
   const [assets, setAssets] = useState<Asset[]>(tokenList.map(token => ({
@@ -87,7 +96,7 @@ export function Portfolio({ isClientReady }: PortfolioProps) {
         <div className="grid gap-4 md:grid-cols-2">
           {/* 总价值卡片 */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-xl font-medium">Total Value</CardTitle>
               <Landmark />
             </CardHeader>
@@ -100,7 +109,7 @@ export function Portfolio({ isClientReady }: PortfolioProps) {
 
           {/* 24小时变化卡片 */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-xl font-medium">24h Change</CardTitle>
               <TrendingUp />
             </CardHeader>
@@ -114,25 +123,32 @@ export function Portfolio({ isClientReady }: PortfolioProps) {
 
         {/* 资产明细卡片 */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-xl font-medium">Asset Breakdown</CardTitle>
             <ChartPie />
           </CardHeader>
-          <CardContent className="pt-2">
+          <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Type</TableHead>
+                  <TableHead>Asset</TableHead>
                   <TableHead>Position</TableHead>
-                  <TableHead>Avg Price</TableHead>
+                  <TableHead>Price</TableHead>
                   <TableHead>Pnl</TableHead>
-                  
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {assets.map((asset: Asset, index: number) => (
                   <TableRow key={index}>
-                    <TableCell className="font-medium">{asset.symbol}</TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        {(() => {
+                          const IconComponent = AntIcons[getIconComponentName(asset.symbol) as keyof typeof AntIcons];
+                          return IconComponent ? <IconComponent style={{ fontSize: '24px' }} /> : null;
+                        })()}
+                        {asset.symbol}
+                      </div>
+                    </TableCell>
                     <TableCell>{asset.amount.toLocaleString('en-US')}</TableCell>
                     <TableCell>
                       ${asset.avg_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>

@@ -37,6 +37,16 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
     setExpandedCard(expandedCard === symbol ? null : symbol);
   };
 
+  // 处理单个交易对金额变化
+  const handleAmountChange = (symbol: string, newAmount: number) => {
+    const index = tokenList.findIndex(token => token.symbol === symbol);
+    if (index !== -1) {
+      const newAmounts = [...amount];
+      newAmounts[index] = newAmount;
+      setTransferAmount(newAmounts);
+    }
+  };
+
   // 用户输入的总金额
   const [totalinput, settotalinput] = useState<number>(0);
   
@@ -197,6 +207,7 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
             position={card.position}
             isExpanded={expandedCard === card.symbol}
             onToggle={() => handleToggle(card.symbol)}
+            onAmountChange={(newAmount) => handleAmountChange(card.symbol, newAmount)}
           />
         ))}
       </div>
@@ -212,10 +223,10 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
               className="w-32 bg-black/20"
             />
           </div>
-          <Button onClick={onClickButton} className="bg-blue-600 hover:bg-blue-700">
+          <Button onClick={onClickButton}>
             Execute
           </Button>
-          <Button onClick={onClickButton_close} className="bg-blue-600 hover:bg-blue-700">
+          <Button onClick={onClickButton_close}>
             Close all position
           </Button>
           

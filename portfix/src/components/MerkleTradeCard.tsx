@@ -1,19 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import { ChevronDown, ChevronUp } from 'lucide-react';
-// import * as AntIcons from '@ant-design/web3';
 import * as AntIcons from '@ant-design/web3-icons';
 import { motion, AnimatePresence } from "motion/react";
 
-// 将symbol转换为AntDesign组件名称的映射函数
-const getIconComponentName = (symbol: string): string => {
-  // 如果是eth，特殊处理为ethereum
-  if (symbol.toLowerCase() === 'eth') {
-    return 'EthereumCircleColorful';
-  }
-  const capitalizedSymbol = symbol.charAt(0).toUpperCase() + symbol.slice(1).toLowerCase();
-  return `${capitalizedSymbol}CircleColorful`;
-};
 
 /**
  * TradeCard组件属性接口定义
@@ -26,111 +18,130 @@ export interface TradeCardProps {
   position: string;      // 交易方向(long/short)
   isExpanded: boolean;   // 是否展开详情
   onToggle: () => void;  // 展开/收起回调函数
+  onAmountChange?: (amount: number) => void; // 金额修改回调函数
 }
 
 /**
  * TradeCard组件 - 展示单个交易对的卡片
  * 包含交易对信息、仓位方向、金额占比和详细信息
  */
-export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isExpanded, onToggle }: TradeCardProps) => {
+export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, position, isExpanded, onToggle, onAmountChange }: TradeCardProps) => {
   // 计算当前交易金额占总金额的百分比
   const percent = totalAmount > 0 ? amount / totalAmount : 0;
 
+  // 将symbol转换为AntDesign组件名称的映射函数
+  const getIconComponentName = (symbol: string): string => {
+    // 如果是eth，特殊处理为ethereum
+    if (symbol.toLowerCase() === 'eth') {
+      return 'EthereumCircleColorful';
+    }
+    const capitalizedSymbol = symbol.charAt(0).toUpperCase() + symbol.slice(1).toLowerCase();
+    return `${capitalizedSymbol}CircleColorful`;
+  };
+
   return (
-    <Card
-      className="overflow-hidden cursor-pointer"
-      onClick={onToggle}
-    >
-      <div className="relative h-16">
+    <Card className="overflow-hidden">
+      <div className="relative">
         {/* 背景方块 */}
         <div
-          className={`absolute left-0 top-0 h-full bg-opacity-20 ${position === 'long' ? 'bg-green-500' : 'bg-red-500' 
+          className={`absolute h-full bg-opacity-20 ${position === 'long' ? 'bg-green-400' : 'bg-red-400' 
             }`}
           style={{ width: `${percent * 100}%` }}
         />
 
-        {/* 内容 */}
-        <div className="relative flex items-center justify-between h-full px-4">
-          <div className="flex items-center gap-3">
-            {
-              (() => {
-                const IconComponent = AntIcons[getIconComponentName(symbol) as keyof typeof AntIcons];
-                return IconComponent ? <IconComponent style={{ fontSize: '32px' }} /> : null;
-              })()
-            }
-            <span className={
-              position === 'long' ? 'text-green-500' : 'text-red-500' 
-            }>
-            </span>
-            <span className="font-medium">{symbol}</span>
-            {position && (
-              <>
-                <span className={`text-sm ${position === 'long' ? 'text-green-500' : 'text-red-500'
-                  }`}>
-                  {position.toUpperCase()}
-                </span>
-                <span className="text-sm text-blue-500">
-                  {Math.round(leverageDefault)}x
-                </span>
-              </>
-            )}
+      <CardHeader className="relative py-4">
+        <div className="flex items-center justify-between">
+          {/* 交易对信息和图标 */}
+          <div className="flex items-center gap-4">
+            {(() => {
+              const IconComponent = AntIcons[getIconComponentName(symbol) as keyof typeof AntIcons];
+              return IconComponent ? <IconComponent style={{ fontSize: '32px' }} /> : null;
+            })()}
+            <div>
+                <CardTitle className="text-lg">{symbol}</CardTitle>
+                <CardDescription>
+                  {position.toUpperCase()} · {Math.round(leverageDefault)}x
+                </CardDescription>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-gray-400">{(percent * 100).toFixed(1)}%</span>
-            {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+
+          {/* 金额占比和展开/收起按钮 */}
+          <div className="flex items-center gap-4">
+            <span>{(percent * 100).toFixed(1)}%</span>
+            <Button variant="ghost" size="icon" onClick={onToggle}>
+              {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+            </Button>
           </div>
         </div>
-      </div>
+      </CardHeader>
+    </div>
 
-      <AnimatePresence initial={false}>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0 }}
-            animate={{ height: "auto" }}
-            exit={{ height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            style={{ overflow: "hidden" }}
-          >
-            <div className="p-4 space-y-4 border-t border-white/20">
-              <div className="flex gap-2">
+
+    <AnimatePresence initial={false}>
+      {isExpanded && (
+        <motion.div
+          initial={{ height: 0 }}
+          animate={{ height: "auto" }}
+          exit={{ height: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          style={{ overflow: "hidden" }}
+        >
+          <CardContent className="space-y-6 pt-6">
+            {/* Leverage Slider */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span>Leverage</span>
+                <span>{Math.round(leverageDefault)}x</span>
+              </div>
+              <Slider
+                defaultValue={[leverageDefault]}
+                max={150}
+                min={3}
+                step={1}
+              />
+            </div>
+
+            {/* Amount */}
+            <div className="space-y-2">
+              <span>Amount</span>
+              <div className="relative">
+                <Input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => onAmountChange?.(Number(e.target.value))}
+                  className="pr-16"
+                />
+                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                  <span className="text-muted-foreground">USDC</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Long & Short */}
+            <div className="space-y-2">
+              <div className="flex gap-3">
                 <Button
-                  disabled
                   className={`flex-1 ${position === 'long'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-green-600/20 text-green-500'
-                    } py-2 rounded-lg cursor-default`}
+                    ? 'bg-green-600 hover:bg-green-700 text-white'
+                    : 'bg-green-600/20 hover:bg-green-600/30 text-green-500'
+                    } py-2`}
                 >
                   Long
                 </Button>
                 <Button
-                  disabled
                   className={`flex-1 ${position === 'short'
-                    ? 'bg-red-600 text-white'
-                    : 'bg-red-600/20 text-red-500'
-                    } py-2 rounded-lg cursor-default`}
+                  ? 'bg-red-600 hover:bg-red-700 text-white'
+                  : 'bg-red-600/20 hover:bg-red-600/30 text-red-500'
+                  } py-2`}
                 >
                   Short
                 </Button>
               </div>
-
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2 flex-1">
-                  <input
-                    type="text"
-                    value={amount}
-                    readOnly
-                    className="flex-1 bg-black/20 rounded-lg p-2 border border-white/20"
-                  />
-                  <span>=</span>
-                  <div className="bg-black/20 rounded-lg p-2 w-24 text-center border border-white/20">
-                    USDC
-                  </div>
-                </div>
-              </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </Card>
+          </CardContent>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </Card>
   );
 };
