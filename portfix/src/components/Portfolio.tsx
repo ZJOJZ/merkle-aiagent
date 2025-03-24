@@ -44,11 +44,13 @@ export function Portfolio({ isClientReady }: PortfolioProps) {
   const updateAsset = async (pair: string) => {
     if (!account || !isClientReady) return;
     
-    const [size, price, pnl] = await getTokenPosition(pair, account.address, merkle);
-    console.log(size, price);
-    const newprice = Number(price) / Number(10000000000);
-    const pnl_usd = Number(pnl) / Number(1000000);
-    console.log(newprice, pair, pnl_usd);
+
+  const [size, price, pnl] = await getTokenPosition(pair, account.address, merkle);
+  //console.log(size, price);
+  const newprice = Number(price) / Number(10000000000);
+  const pnl_usd = Number(pnl) / Number(1000000);
+  //console.log(newprice, pair, pnl_usd);
+    
     setAssets(prevAssets =>
       prevAssets.map(asset =>
         asset.pair === pair
