@@ -1,8 +1,8 @@
 "use client"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 
@@ -17,6 +17,7 @@ import type { InputTransactionData } from "@aptos-labs/wallet-adapter-react"
 
 interface AgentUIProps {
     isaptosAgentReady: boolean;
+    onBalanceChange?: (balance: number) => void;
 }
 
 // transit amount to the shares
@@ -36,12 +37,12 @@ async function Amount2Shares(amount: number, token: string) {
   }
 }
 
-export function MoveAIAgent({ isaptosAgentReady }: AgentUIProps) {
+export function JoulePositions({ isaptosAgentReady, onBalanceChange }: AgentUIProps) {
     const [result, setResult] = useState(null);
     const [balance, setBalance] = useState(Number);
     const [txInfo, setTxInfo] = useState(null);
     const [userPositions, setUserPositions] = useState();
-
+    
     //const Agenttools = createAptosTools(aptosAgent);
     const [totalborrow, settotalborrow] = useState<number>(0);
     const [pborrow, setpborrow] = useState<string>("");
@@ -86,6 +87,7 @@ export function MoveAIAgent({ isaptosAgentReady }: AgentUIProps) {
                 // Get Balance
                 const accountBalance = await aptosAgent.getBalance();
                 setBalance(accountBalance);
+                onBalanceChange?.(accountBalance);
                 
                 
             } catch (error) {
@@ -143,115 +145,43 @@ export function MoveAIAgent({ isaptosAgentReady }: AgentUIProps) {
         }
       };
     // Corrected return statement using shadcn UI card
-    console.log(userPositions)
     return (
-          <div className="space-y-2">
-                {/* <div>Transfer Result: {JSON.stringify(result)}</div> */}
-                {/* <div>Balance: {balance}</div> */}
-                {/* <div>Transaction Info: {JSON.stringify(txInfo)}</div> */}
-            <div className="flex items-center gap-2">
-            <span>Lend</span>
-            <Input
-              type="number"
-              value={totallend}
-              onChange={(e) => settotallend(Number(e.target.value))}
-              className="w-36"
-            />
-            <Select value={plend} onValueChange={setplend} defaultValue={userPositions?.[0]?.positions_map?.data?.[0]?.key}>
-              <SelectTrigger >
-                <SelectValue placeholder="Select position" />
-              </SelectTrigger>
-              <SelectContent>
-                {userPositions?.[0]?.positions_map?.data?.map((position) => (
-                  <SelectItem key={position.key} value={position.key}>
-                    {position.value.position_name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button onClick={onClickButton_lend}>
-                Execute
-            </Button>
-            </div>
-            
-
-            <div className="flex items-center gap-2">
-            <span>Withdraw</span>
-            <Input
-              type="number"
-              value={totalwithdraw}
-              onChange={(e) => settotalwithdraw(Number(e.target.value))}
-              className="w-36"
-            />
-            <Select value={pwithdraw} onValueChange={setpwithdraw} defaultValue={userPositions?.[0]?.positions_map?.data?.[0]?.key}>
-              <SelectTrigger >
-                <SelectValue placeholder="Select position" />
-              </SelectTrigger>
-              <SelectContent>
-                {userPositions?.[0]?.positions_map?.data?.map((position) => (
-                  <SelectItem key={position.key} value={position.key}>
-                    {position.value.position_name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button onClick={onClickButton_withdraw}>
-                Execute
-            </Button>
-            </div>
-
-
-            <div className="flex items-center gap-2">
-            <span>Borrow</span>
-            <Input
-              type="number"
-              value={totalborrow}
-              onChange={(e) => settotalborrow(Number(e.target.value))}
-              className="w-36"
-            />
-            <Select value={pborrow} onValueChange={setpborrow} defaultValue={userPositions?.[0]?.positions_map?.data?.[0]?.key}>
-              <SelectTrigger >
-                <SelectValue placeholder="Select position" />
-              </SelectTrigger>
-              <SelectContent>
-                {userPositions?.[0]?.positions_map?.data?.map((position) => (
-                  <SelectItem key={position.key} value={position.key}>
-                    {position.value.position_name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button onClick={onClickButton_borrow}>
-                Execute
-            </Button>
-            </div>
-            
-
-            <div className="flex items-center gap-2">
-            <span>Repay</span>
-            <Input
-              type="number"
-              value={totalrepay}
-              onChange={(e) => settotalrepay(Number(e.target.value))}
-              className="w-36"
-            />
-            <Select value={prepay} onValueChange={setprepay} defaultValue={userPositions?.[0]?.positions_map?.data?.[0]?.key}>
-              <SelectTrigger >
-                <SelectValue placeholder="Select position" />
-              </SelectTrigger>
-              <SelectContent>
-                {userPositions?.[0]?.positions_map?.data?.map((position) => (
-                  <SelectItem key={position.key} value={position.key}>
-                    {position.value.position_name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            
-            <Button onClick={onClickButton_repay}>
-                Execute
-            </Button>
-            </div>
-</div>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Position</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead>Coin</TableHead>
+                            <TableHead>Amount</TableHead>
+                            <TableHead>Interest</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {userPositions?.[0]?.positions_map?.data?.map((position) => (
+                            <>
+                                {/* Lending Positions */}
+                                {position.value.lend_positions.data.map((lendPosition) => (
+                                    <TableRow key={`${position.key}-lend-${lendPosition.key}`}>
+                                        <TableCell>{position.value.position_name}</TableCell>
+                                        <TableCell>Lending</TableCell>
+                                        <TableCell>{getTokenName(lendPosition.key.replace("@","0x"))}</TableCell>
+                                        <TableCell>{lendPosition.value}</TableCell>
+                                        <TableCell>-</TableCell>
+                                    </TableRow>
+                                ))}
+                                {/* Borrowing Positions */}
+                                {position.value.borrow_positions.data.map((borrowPosition) => (
+                                    <TableRow key={`${position.key}-borrow-${borrowPosition.key}`}>
+                                        <TableCell>{position.value.position_name}</TableCell>
+                                        <TableCell>Borrowing</TableCell>
+                                        <TableCell>{getTokenName(borrowPosition.value.coin_name.replace("@","0x"))}</TableCell>
+                                        <TableCell>{borrowPosition.value.borrow_amount}</TableCell>
+                                        <TableCell>{borrowPosition.value.interest_accumulated}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </>
+                        ))}
+                    </TableBody>
+                </Table>
     );
 }

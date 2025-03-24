@@ -1,13 +1,22 @@
 import { Landmark, TrendingUp, ChartPie, WalletMinimal } from "lucide-react";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs"
+
 import * as AntIcons from '@ant-design/web3-icons';
 
+// React States
 import { useState, useEffect } from 'react';
 
-import { getTokenPosition, getBalance } from "@/entry-functions/merkleTrade";
+// Aptos
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+
+// Merkle Trade Positions
+import { getTokenPosition, getBalance } from "@/entry-functions/merkleTrade";
 import { merkle, tokenList } from "@/components/Main";
+
+// Joule Finance Positions
+import { JoulePositions } from "@/components/JoulePositions";
 
 
 interface Asset {
@@ -18,14 +27,13 @@ interface Asset {
   pnl: number;
 }
 
-interface PortfolioProps {
-  isClientReady: boolean;
-}
+interface PortfolioProps { isClientReady: boolean; isaptosAgentReady: boolean; }
 
-export function Portfolio({ isClientReady }: PortfolioProps) {
+export function Portfolio({ isClientReady, isaptosAgentReady }: PortfolioProps) {
+  
   // 将symbol转换为AntDesign组件名称的映射函数
   const getIconComponentName = (symbol: string): string => {
-    if (symbol.toLowerCase() === 'eth') {
+    if (symbol.toLowerCase() === 'eth') { 
       return 'EthereumCircleColorful';
     }
     const capitalizedSymbol = symbol.charAt(0).toUpperCase() + symbol.slice(1).toLowerCase();
@@ -126,42 +134,52 @@ export function Portfolio({ isClientReady }: PortfolioProps) {
         {/* 资产明细卡片 */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xl font-medium">Asset Breakdown</CardTitle>
+            <CardTitle className="text-xl font-medium">Positions</CardTitle>
             <ChartPie />
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Asset</TableHead>
-                  <TableHead>Position</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Pnl</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {assets.map((asset: Asset, index: number) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        {(() => {
-                          const IconComponent = AntIcons[getIconComponentName(asset.symbol) as keyof typeof AntIcons];
-                          return IconComponent ? <IconComponent style={{ fontSize: '24px' }} /> : null;
-                        })()}
-                        {asset.symbol}
-                      </div>
-                    </TableCell>
-                    <TableCell>{asset.amount.toLocaleString('en-US')}</TableCell>
-                    <TableCell>
-                      ${asset.avg_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
-                    <TableCell>
-                      ${asset.pnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <Tabs defaultValue="merkle" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="merkle">Merkle Trade</TabsTrigger>
+                <TabsTrigger value="joule">Joule Finance</TabsTrigger>
+              </TabsList>
+              <TabsContent value="merkle">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Asset</TableHead>
+                      <TableHead>Position</TableHead>
+                      <TableHead>Price</TableHead>
+                      <TableHead>Pnl</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {assets.map((asset: Asset, index: number) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-2">
+                            {(() => {
+                              const IconComponent = AntIcons[getIconComponentName(asset.symbol) as keyof typeof AntIcons];
+                              return IconComponent ? <IconComponent style={{ fontSize: '24px' }} /> : null;
+                            })()}
+                            {asset.symbol}
+                          </div>
+                        </TableCell>
+                        <TableCell>{asset.amount.toLocaleString('en-US')}</TableCell>
+                        <TableCell>
+                          ${asset.avg_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                        <TableCell>
+                          ${asset.pnl.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TabsContent>
+              <TabsContent value="joule">
+                <JoulePositions isaptosAgentReady={isaptosAgentReady}/>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       </div>
