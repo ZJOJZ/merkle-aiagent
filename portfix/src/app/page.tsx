@@ -27,10 +27,10 @@ function App() {
           <Welcome />
         )}
 
-        {connected && (
+        {/* {connected && (
           // After connect shows: 
           <AccountDetails />
-        )}
+        )} */}
       </div>
 
       {/* 背景动画效果 */}

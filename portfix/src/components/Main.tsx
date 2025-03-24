@@ -65,16 +65,13 @@ export function Platform() {
   }, []);
 
   return (
-    <div className="w-full max-w-7xl p-6">
+    <div className="w-full max-w-7xl p-10">
       <div className="flex flex-row gap-10">
         <div className="flex-1">
-          <Portfolio isClientReady={isClientReady} />
+          <Portfolio isClientReady={isClientReady} isaptosAgentReady={isaptosAgentReady}/>
         </div>
         <div className="flex-1">
-          <TradeUI isClientReady={isClientReady} />
-        </div>
-        <div className="flex-1">
-          <MoveAIAgent isaptosAgentReady={isaptosAgentReady} />
+          <TradeUI isClientReady={isClientReady} isaptosAgentReady={isaptosAgentReady}/>
         </div>
       </div>
     </div>

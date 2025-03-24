@@ -11,13 +11,16 @@ import { merkle, tokenList } from "@/components/Main";
 import { OpenPosition, CloseAllPosition } from "@/entry-functions/merkleTrade";
 import { MerkleTradeCard } from "@/components/MerkleTradeCard";
 
+// Joule Finane Components
+import { MoveAIAgent } from "@/components/MoveAIAgent";
+
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 
 
 interface TradeUIProps {
-  isClientReady: boolean;
+  isClientReady: boolean; isaptosAgentReady: boolean; 
 }
 
 /**
@@ -27,7 +30,7 @@ interface TradeUIProps {
  * 2. 管理交易状态和用户输入
  * 3. 执行交易操作
  */
-export function TradeUI({ isClientReady }: TradeUIProps) {
+export function TradeUI({ isClientReady, isaptosAgentReady }: TradeUIProps) {
   // 控制展开的卡片
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const queryClient = useQueryClient();
@@ -99,7 +102,7 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
    * 执行多个交易对的开仓操作
    */
   const onClickButton = async () => {
-    //console.log(totalAmount);
+    console.log(totalAmount);
     if (!account || !isClientReady) {
       return;
     }
@@ -213,7 +216,7 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
     {/* <div className="mt-4 mr-4 flex flex-col gap-4 p-4 md:p-8 rounded-lg bg-card w-full max-w-[600px] border-2 border-white/50"> */}
       {/* 标题栏：两端对齐布局 */}
       <div className="flex items-center justify-between space-y-0 pb-2">
-        <h2 className="text-2xl font-bold">Trade</h2>
+        <h2 className="text-2xl font-bold">Merkle Trade</h2>
         <ChartCandlestick />
       </div>
       <div className="space-y-2">
@@ -254,7 +257,39 @@ export function TradeUI({ isClientReady }: TradeUIProps) {
           
         </div>
       </div>
-    </div>
+
+
+
+      {/* 标题栏：两端对齐布局 */}
+      <div className="flex items-center justify-between space-y-0 pb-2">
+        <h2 className="text-2xl font-bold">Joule Finance</h2>
+        <ChartCandlestick />
+      </div>
+      <div className="space-y-2">
+      <MoveAIAgent isaptosAgentReady={isaptosAgentReady} />
+      </div>
+      {/* 添加底部栏 */}
+      <div className="mt-4 pt-4 border-t border-white/20">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <span className="text-gray-400 text-xl">Total Amount</span>
+            <Input
+              type="number"
+              onChange={(e) => settotalinput(Number(e.target.value))}
+              placeholder={`${totalAmount}`}
+              className="w-32"
+            />
+          </div>
+          <Button onClick={onClickButton}>
+            Execute
+          </Button>
+          <Button onClick={onClickButton_close}>
+            Close all position
+          </Button>
+          
+        </div>
+      </div>
+      </div>
     </div>
   );
 }
