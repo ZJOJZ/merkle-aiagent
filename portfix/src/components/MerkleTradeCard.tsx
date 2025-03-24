@@ -1,7 +1,19 @@
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { TokenIcon } from '@web3icons/react';
-import { motion, AnimatePresence } from 'framer-motion';
+// import * as AntIcons from '@ant-design/web3';
+import * as AntIcons from '@ant-design/web3-icons';
+import { motion, AnimatePresence } from "motion/react";
+
+// 将symbol转换为AntDesign组件名称的映射函数
+const getIconComponentName = (symbol: string): string => {
+  // 如果是eth，特殊处理为ethereum
+  if (symbol.toLowerCase() === 'eth') {
+    return 'EthereumCircleColorful';
+  }
+  const capitalizedSymbol = symbol.charAt(0).toUpperCase() + symbol.slice(1).toLowerCase();
+  return `${capitalizedSymbol}CircleColorful`;
+};
 
 /**
  * TradeCard组件属性接口定义
@@ -25,16 +37,14 @@ export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, 
   const percent = totalAmount > 0 ? amount / totalAmount : 0;
 
   return (
-    <div
-      className="border-2 border-white/20 rounded-lg bg-card/50 overflow-hidden cursor-pointer"
+    <Card
+      className="overflow-hidden cursor-pointer"
       onClick={onToggle}
     >
       <div className="relative h-16">
         {/* 背景方块 */}
         <div
-          className={`absolute left-0 top-0 h-full bg-opacity-20 ${position === 'long' ? 'bg-green-500' :
-            position === 'short' ? 'bg-red-500' :
-              symbol.startsWith('ETH') ? 'bg-blue-500' : 'bg-orange-500'
+          className={`absolute left-0 top-0 h-full bg-opacity-20 ${position === 'long' ? 'bg-green-500' : 'bg-red-500' 
             }`}
           style={{ width: `${percent * 100}%` }}
         />
@@ -42,11 +52,14 @@ export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, 
         {/* 内容 */}
         <div className="relative flex items-center justify-between h-full px-4">
           <div className="flex items-center gap-3">
-            <TokenIcon symbol={symbol.toLowerCase()} size={32} variant="mono" />
+            {
+              (() => {
+                const IconComponent = AntIcons[getIconComponentName(symbol) as keyof typeof AntIcons];
+                return IconComponent ? <IconComponent style={{ fontSize: '32px' }} /> : null;
+              })()
+            }
             <span className={
-              position === 'long' ? 'text-green-500' :
-                position === 'short' ? 'text-red-500' :
-                  symbol.startsWith('ETH') ? 'text-blue-500' : 'text-orange-500'
+              position === 'long' ? 'text-green-500' : 'text-red-500' 
             }>
             </span>
             <span className="font-medium">{symbol}</span>
@@ -118,6 +131,6 @@ export const MerkleTradeCard = ({ symbol, amount, totalAmount, leverageDefault, 
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Card>
   );
 };

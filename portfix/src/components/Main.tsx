@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { MerkleClient, MerkleClientConfig, PriceFeed } from "@merkletrade/ts-sdk";
 import { Portfolio } from "@/components/Portfolio";
 import { TradeUI } from "@/components/Trade";
-import { MerkleTokenPair } from "@/components/MerklePair";
+import { MerkleTokenPair } from "@/components/MerkleTokenPair";
 
 // 全局共享的 Merkle 客户端实例
 export let merkle: MerkleClient;

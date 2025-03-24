@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { ChevronDown, ChevronUp, ChartCandlestick } from 'lucide-react';
-import { TokenIcon } from '@web3icons/react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ChartCandlestick } from 'lucide-react';
 
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { aptosClient } from "@/utils/aptosClient";
