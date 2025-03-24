@@ -50,16 +50,16 @@ export const MerkleTokenPair = [
     //   skewFactor: 30000000,
     //   category: "Crypto"
     // },
-    {
-      symbol: "TRUMP",
-      pair: "TRUMP_USD",
-      fee: "0.04% / 0.08%",
-      minimumPay: 300,
-      leverage: "3 - 150",
-      maxOI: 100000,
-      skewFactor: 30000000,
-      category: "Crypto"
-    },
+    // {
+    //   symbol: "TRUMP",
+    //   pair: "TRUMP_USD",
+    //   fee: "0.04% / 0.08%",
+    //   minimumPay: 300,
+    //   leverage: "3 - 150",
+    //   maxOI: 100000,
+    //   skewFactor: 30000000,
+    //   category: "Crypto"
+    // },
     // {
     //   symbol: "AI16Z",
     //   pair: "AI16Z_USD",
@@ -160,16 +160,16 @@ export const MerkleTokenPair = [
     //   skewFactor: 45000000,
     //   category: "Crypto"
     // },
-    // {
-    //   symbol: "DOGE",
-    //   pair: "DOGE_USD",
-    //   fee: "0.04% / 0.08%",
-    //   minimumPay: 300,
-    //   leverage: "3 - 150",
-    //   maxOI: 200000,
-    //   skewFactor: 100000000,
-    //   category: "Crypto"
-    // },
+    {
+      symbol: "DOGE",
+      pair: "DOGE_USD",
+      fee: "0.04% / 0.08%",
+      minimumPay: 300,
+      leverage: "3 - 150",
+      maxOI: 200000,
+      skewFactor: 100000000,
+      category: "Crypto"
+    },
     // {
     //   symbol: "EIGEN",
     //   pair: "EIGEN_USD",

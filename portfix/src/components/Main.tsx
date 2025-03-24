@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MerkleClient, MerkleClientConfig } from "@merkletrade/ts-sdk";
+import { MerkleClient, MerkleClientConfig, PriceFeed } from "@merkletrade/ts-sdk";
 import { Portfolio } from "@/components/Portfolio";
 import { TradeUI } from "@/components/Trade";
-import { MerkleTokenPair } from "@/components/MerklePair";
-import type {PriceFeed } from "@/types/api/wsapi";
+import { MerkleTokenPair } from "@/components/MerkleTokenPair";
 
 import { AgentRuntime, WalletSigner} from "../../move-agent-kit/src";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
@@ -19,6 +18,7 @@ export let aptos: Aptos;
 export let signer: WalletSigner;
 export let aptosAgent: AgentRuntime;
 export const priceFeedMap: Map<string, PriceFeed> = new Map();
+
 // Export 前6个交易对
 export const tokenList = MerkleTokenPair.slice(0, 6);
 
