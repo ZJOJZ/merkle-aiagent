@@ -19,6 +19,9 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   applicationName: "PortfiX",
   title: "PortfiX",
+  icons: {
+    icon: "aptos.png",
+  },
   description: "Your next-generation decentralized portfolio AI manager.",
   manifest: "/manifest.json",
 };
